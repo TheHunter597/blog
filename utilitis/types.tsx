@@ -12,15 +12,3 @@ export type headerPosts = {
   slug: string;
   categories: [{ slug: string }];
 };
-
-// export enum actionType {
-//   CHANGE_POSTS_DATA = "CHANGE_POSTS_DATA",
-// }
-
-// export type dispatch = ({
-//   type,
-//   value,
-// }: {
-//   type: actionType;
-//   value: any;
-// }) => void;

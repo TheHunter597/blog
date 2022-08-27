@@ -1,7 +1,5 @@
 import HomePost from "./HomePost/HomePost";
-import { useContext } from "react";
 import styles from "./Header.module.scss";
-import context from "../../context/context";
 import { headerPosts } from "../../utilitis/types";
 
 interface props {
