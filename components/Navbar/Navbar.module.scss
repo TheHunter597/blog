@@ -14,10 +14,15 @@
   }
   &__headers {
     font-size: $fs-large;
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
     ul {
       list-style: none;
       display: flex;
       flex-direction: row;
+      justify-content: center;
       color: var(--secondary-text-color);
       gap: 3rem;
       li {
@@ -26,6 +31,62 @@
           transform: scale(1.05);
           color: var(--orange-color);
         }
+      }
+    }
+  }
+  &__search {
+    font-size: 4rem;
+  }
+  &__searchInput {
+    position: relative;
+  }
+  &__search {
+    position: absolute;
+    left: 0%;
+    top: -15%;
+    transform: translateX(200%);
+    transition: all 1s;
+    z-index: 1;
+    cursor: pointer;
+    &__active {
+      transition: all 1.5s;
+      transform: translateX(-100%);
+    }
+  }
+  &__input {
+    opacity: 0;
+    font-size: 1.5rem;
+    padding: 0.3rem 1rem;
+    border-radius: 4px;
+    border: 1px solid blue;
+    transition: all 0.7s;
+    &__active {
+      display: block;
+      transition: all 2s;
+      opacity: 1;
+      display: inline;
+    }
+  }
+  &__dropdown {
+    position: absolute;
+    top: 60%;
+    background-color: var(--orange-color);
+    width: 100%;
+    border-radius: 0 0 10px 10px;
+    font-size: $fs-medium;
+    list-style: none;
+    padding: 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    li {
+      width: 100%;
+      color: var(--primary-text-color);
+      cursor: pointer;
+      transition: all 0.5s;
+      &:hover {
+        color: var(--tertiary-text-color);
+        transform: scale(1.1);
       }
     }
   }

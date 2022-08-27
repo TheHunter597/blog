@@ -6,6 +6,8 @@ export async function getCategoryData(category: string) {
   const query = gql`
     query MyQuery {
       category(where: { slug: "${category}" }) {
+        name
+        slug
         posts {
           title
           slug

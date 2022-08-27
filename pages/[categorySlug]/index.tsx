@@ -1,8 +1,12 @@
 import { getCategoriesData } from "../../data/getCategoriesData";
 import styles from "./Category.module.scss";
-import { headerPosts } from "../../utilitis/types";
+import { headerPosts, contextType, actionTypes } from "../../utilitis/types";
 import HomePost from "../../components/Home/HomePost/HomePost";
 import { getCategoryData } from "../../data/getCategoryData";
+import Head from "next/head";
+import { useContext, useEffect } from "react";
+import context from "../../context/context";
+
 interface category {
   slug: string;
   name: string;
@@ -10,16 +14,30 @@ interface category {
 }
 
 interface props {
-  category: {
-    posts: headerPosts[];
+  categoryData: {
+    category: {
+      name: string;
+      posts: headerPosts[];
+    };
   };
 }
-function Category(props: { categoryData: props }) {
+function Category(props: props) {
   let { categoryData } = props;
+  const contextData = useContext(context) as contextType;
+  const { state, dispatch } = contextData;
+
   const result = categoryData.category.posts.map((post: headerPosts) => {
     return <HomePost data={post} key={post.title} />;
   });
-  return <div className={styles.Category}>{result}</div>;
+
+  return (
+    <>
+      <Head>
+        <title>{categoryData.category.name}</title>
+      </Head>
+      <div className={styles.Category}>{result}</div>
+    </>
+  );
 }
 
 export async function getStaticPaths() {

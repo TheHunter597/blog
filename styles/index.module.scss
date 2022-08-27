@@ -53,6 +53,10 @@ $charcoal--800: #1d2b36;
   }
 }
 
+.container {
+  background-color: rgba(#f9fafa, 0.7);
+}
+
 .root {
   --page-bg-color: #{$neutral-light-gray};
   --primary-text-color: #{$charcoal--800};
@@ -60,7 +64,6 @@ $charcoal--800: #1d2b36;
   --tertiary-text-color: #{$neutral-dark-blue};
   --orange-color: #{$primary-red};
   scroll-behavior: smooth;
-  background-color: rgba(#eaeaea, 0.7);
 }
 
 .dark {
@@ -71,3 +74,5 @@ $charcoal--800: #1d2b36;
   animation: test 0.4s forwards;
   scroll-behavior: smooth;
 }
+
+$fs-navbar: 2.75rem;

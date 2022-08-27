@@ -12,6 +12,10 @@ export async function getPostsData() {
         coverImage {
           url
         }
+        categories {
+          name
+          slug
+        }
       }
     }
   `;

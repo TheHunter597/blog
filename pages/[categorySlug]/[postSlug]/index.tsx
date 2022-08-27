@@ -41,7 +41,7 @@ function Post(props: props) {
     .concat();
 
   return (
-    <div className={styles.Post}>
+    <div className={`${styles.Post} ${styles.container}`}>
       <div className={styles.Post__info}>
         <h3>{shownTitle}</h3>
         <div>
@@ -77,7 +77,7 @@ export async function getStaticPaths() {
       })
     );
   });
-  console.log(paths);
+
   return {
     fallback: false,
     paths: Allpaths,
@@ -86,7 +86,6 @@ export async function getStaticPaths() {
 
 export async function getStaticProps(context: any) {
   let result = (await getPostData(context.params.postSlug)) || [];
-  console.log(result);
 
   return {
     props: {

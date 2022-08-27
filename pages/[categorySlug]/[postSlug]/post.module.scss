@@ -4,7 +4,7 @@
   display: grid;
   width: min(90%, 1250px);
   margin-inline: auto;
-  grid-template-rows: 0.05fr 0.1fr 0.5fr 1fr;
+  grid-template-rows: 0.05fr 0.1fr 650px 1fr;
   grid-template-areas:
     " . "
     " info "
@@ -61,6 +61,10 @@
       word-spacing: 4px;
       font-weight: 300;
       color: var(--primary-text-color);
+      a {
+        font-size: $fs-large;
+        color: var(--orange-color);
+      }
     }
   }
 }
