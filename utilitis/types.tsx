@@ -16,11 +16,15 @@ export type headerPosts = {
 export enum actionTypes {
   CHANGE_POSTS = "CHANGE_POSTS",
   CHANGE_CATEGORIES_DATA = "CHANGE_CATEGORIES_DATA",
+  CHANGE_PHONE_USER = "CHANGE_PHONE_USER",
 }
 
 export interface state {
   posts: { title: string; slug: string; categories: { slug: string }[] }[];
-  categories: { categories: { name: string; slug: string }[] };
+  categories: {
+    categories: { name: string; slug: string; posts: { excerpt: string }[] }[];
+  };
+  phoneUser: boolean;
 }
 
 export type dispatch = ({

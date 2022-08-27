@@ -14,6 +14,7 @@ const context = createContext<contextType | null>(null);
 const initialState: state = {
   posts: [],
   categories: { categories: [] },
+  phoneUser: false,
 };
 
 function reducer(state: state, action: action): state {
@@ -23,6 +24,8 @@ function reducer(state: state, action: action): state {
       return { ...state, posts: value };
     case actionTypes.CHANGE_CATEGORIES_DATA:
       return { ...state, categories: value };
+    case actionTypes.CHANGE_PHONE_USER:
+      return { ...state, phoneUser: value };
     default:
       return state;
   }
@@ -30,7 +33,6 @@ function reducer(state: state, action: action): state {
 
 export function ContextProvider(props: props) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log(state);
 
   return (
     <context.Provider value={{ state, dispatch }}>

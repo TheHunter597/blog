@@ -5,6 +5,11 @@
   display: grid;
   grid-template-columns: 50% 50%;
   gap: 6rem;
+  @media (max-width: 800px) {
+    display: grid;
+    grid-template-columns: 100%;
+    margin-inline: auto;
+  }
   div {
     h3 {
       text-align: center;

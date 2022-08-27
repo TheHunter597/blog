@@ -1,22 +1,64 @@
 import styles from "./Navbar.module.scss";
 import Link from "next/link";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import context from "../../context/context";
-import { contextType } from "../../utilitis/types";
+import { actionTypes, contextType } from "../../utilitis/types";
 import { FcSearch } from "react-icons/fc";
+import { FaBars } from "react-icons/fa";
 function Navbar() {
   const contextData = useContext(context) as contextType;
   const { state, dispatch } = contextData;
   const input = useRef<HTMLInputElement>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSearch, setActiveSearch] = useState(false);
-  const categories = state.categories.categories.map((category) => {
-    return { name: category.name, slug: category.slug };
-  });
+  const [showHeaders, setShowHeaders] = useState(false);
+
+  useEffect(() => {
+    window.innerWidth < 1000
+      ? dispatch({ type: actionTypes.CHANGE_PHONE_USER, value: true })
+      : dispatch({ type: actionTypes.CHANGE_PHONE_USER, value: false });
+    window.addEventListener("resize", () =>
+      window.innerWidth < 1000
+        ? dispatch({ type: actionTypes.CHANGE_PHONE_USER, value: true })
+        : dispatch({ type: actionTypes.CHANGE_PHONE_USER, value: false })
+    );
+    return () => {
+      window.removeEventListener("resize", () =>
+        window.innerWidth < 1000
+          ? dispatch({ type: actionTypes.CHANGE_PHONE_USER, value: true })
+          : dispatch({ type: actionTypes.CHANGE_PHONE_USER, value: false })
+      );
+    };
+  }, []);
+
+  let categories = [
+    {
+      name: "Javascript",
+      slug: "javascript",
+    },
+    {
+      name: "Typescript",
+      slug: "typescript",
+    },
+    {
+      name: "Scss",
+      slug: "scss",
+    },
+    {
+      name: "React",
+      slug: "react",
+    },
+    {
+      name: "GraphCMS",
+      slug: "graph-cms",
+    },
+  ];
 
   const dropdownContent = state.posts
     .filter((post) => {
-      return post.title.includes(searchTerm);
+      return searchTerm.length >= 2
+        ? post.title.toLowerCase().includes(searchTerm.toLowerCase())
+        : "";
     })
     .map((post) => {
       return (
@@ -25,7 +67,7 @@ function Navbar() {
             setSearchTerm("");
             setActiveSearch(false);
           }}
-          key={post.categories[0].slug}
+          key={post.title}
         >
           <Link href={`/${post.categories[0].slug}/${post.slug}`}>
             <a>{post.title.slice(0, 15)}...</a>
@@ -34,7 +76,7 @@ function Navbar() {
       );
     });
 
-  return (
+  const wideScreenNav = (
     <div className={styles.Navbar}>
       <div className={styles.Navbar__logo}>
         <Link href="/">
@@ -80,6 +122,71 @@ function Navbar() {
       </div>
     </div>
   );
+
+  const smallerScreenNav = (
+    <div className={styles.Navbar}>
+      <div className={styles.Navbar__logo}>
+        <Link href="/">
+          <a>Variable</a>
+        </Link>
+      </div>
+      <div
+        className={`${styles.Navbar__search} ${
+          activeSearch ? styles.Navbar__search__active : ""
+        }`}
+        onClick={() => {
+          setActiveSearch((prev) => !prev);
+          setShowHeaders(false);
+          setTimeout(() => {
+            input.current?.focus();
+          }, 100);
+        }}
+      >
+        <FcSearch />
+      </div>
+      {activeSearch ? (
+        <div className={styles.Navbar__dropdown}>
+          <input
+            disabled={!activeSearch}
+            className={`${styles.Navbar__input} ${
+              activeSearch ? styles.Navbar__input__active : ""
+            }`}
+            ref={input}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <ul>{dropdownContent}</ul>
+        </div>
+      ) : (
+        ""
+      )}
+      <div
+        className={`${styles.Navbar__bars} ${
+          state.phoneUser ? styles.Navbar__bars__appear : ""
+        } ${showHeaders ? styles.Navbar__bars__active : ""}`}
+        onClick={() => {
+          setShowHeaders((prev) => !prev);
+          setActiveSearch(false);
+        }}
+      >
+        <FaBars />
+      </div>
+      {showHeaders ? (
+        <div className={styles.Navbar__headers}>
+          <ul>
+            {categories.map((category) => (
+              <li key={category.slug} onClick={() => setShowHeaders(false)}>
+                <Link href={`/${category.slug}`}>{category.name}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        ""
+      )}
+    </div>
+  );
+
+  return !state.phoneUser ? wideScreenNav : smallerScreenNav;
 }
 
 export default Navbar;

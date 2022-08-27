@@ -21,7 +21,7 @@ function Home(props: props) {
   let { latestPosts, allPosts, categoriesData } = props;
 
   const contextData = useContext(context) as contextType;
-  const { state, dispatch } = contextData;
+  const { dispatch, state } = contextData;
   useEffect(() => {
     dispatch({ type: actionTypes.CHANGE_POSTS, value: allPosts.posts });
     dispatch({

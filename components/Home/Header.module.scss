@@ -1,3 +1,5 @@
+@import "../../styles/index.module.scss";
+
 .Header {
   margin-top: 2rem;
   display: grid;
@@ -12,5 +14,18 @@
     &:first-child {
       grid-area: main;
     }
+  }
+  @media (max-width: 900px) {
+    width: min(95%, 780px);
+    margin-inline: auto;
+    grid-template-columns: 0.5fr 0.5fr;
+    grid-template-rows: 0.5fr 0.5fr;
+    grid-template-areas:
+      "main main"
+      "second third";
+    h3 {
+      font-size: $fs-medium;
+    }
+    gap: 10px 20px;
   }
 }

@@ -40,6 +40,7 @@ function Post(props: props) {
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1) + " ")
     .concat();
+  console.log(content);
 
   return (
     <>
