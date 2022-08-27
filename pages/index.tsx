@@ -67,6 +67,7 @@ export async function getStaticProps() {
       allPosts: allPosts,
       categoriesData: categoriesData,
     },
+    revalidate: 30,
   };
 }
 

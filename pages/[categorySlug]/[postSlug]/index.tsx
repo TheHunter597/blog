@@ -3,6 +3,7 @@ import { getCategoriesData } from "../../../data/getCategoriesData";
 import { headerPosts } from "../../../utilitis/types";
 import { getPostData } from "../../../data/getPostData";
 import { useEffect } from "react";
+import Head from "next/head";
 
 interface category {
   slug: string;
@@ -41,29 +42,34 @@ function Post(props: props) {
     .concat();
 
   return (
-    <div className={`${styles.Post} ${styles.container}`}>
-      <div className={styles.Post__info}>
-        <h3>{shownTitle}</h3>
-        <div>
-          {author != null ? (
-            <img
-              src={author.picture != null ? author.picture.url : ""}
-              alt=""
-            />
-          ) : (
-            ""
-          )}
-          <p>Written By {author.name}</p>
-          <span>{date}</span>
+    <>
+      <Head>
+        <title>{data.post.title}</title>
+      </Head>
+      <div className={`${styles.Post} ${styles.container}`}>
+        <div className={styles.Post__info}>
+          <h3>{shownTitle}</h3>
+          <div>
+            {author != null ? (
+              <img
+                src={author.picture != null ? author.picture.url : ""}
+                alt=""
+              />
+            ) : (
+              ""
+            )}
+            <p>Written By {author.name}</p>
+            <span>{date}</span>
+          </div>
+        </div>
+        <div className={styles.Post__image}>
+          <img alt="" src={coverImage.url} />
+        </div>
+        <div className={styles.Post__content}>
+          <p id="content"></p>
         </div>
       </div>
-      <div className={styles.Post__image}>
-        <img alt="" src={coverImage.url} />
-      </div>
-      <div className={styles.Post__content}>
-        <p id="content"></p>
-      </div>
-    </div>
+    </>
   );
 }
 
@@ -91,6 +97,7 @@ export async function getStaticProps(context: any) {
     props: {
       data: result,
     },
+    revalidate: 30,
   };
 }
 

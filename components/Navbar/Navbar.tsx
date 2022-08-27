@@ -25,6 +25,7 @@ function Navbar() {
             setSearchTerm("");
             setActiveSearch(false);
           }}
+          key={post.categories[0].slug}
         >
           <Link href={`/${post.categories[0].slug}/${post.slug}`}>
             <a>{post.title.slice(0, 15)}...</a>
