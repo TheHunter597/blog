@@ -45,7 +45,11 @@ function Post(props: props) {
       <div className={styles.Post__info}>
         <h3>{shownTitle}</h3>
         <div>
-          <img src={author.picture ? author.picture.url : ""} alt="" />
+          {author.picture != null ? (
+            <img src={author.picture.url} alt="" />
+          ) : (
+            ""
+          )}
           <p>Written By {author.name}</p>
           <span>{date}</span>
         </div>
