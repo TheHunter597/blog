@@ -1,0 +1,73 @@
+$fs-tiny: 1.2rem;
+$fs-small: 1.6rem;
+$fs-medium: 2rem;
+$fs-large: 2.5rem;
+$fs-extra: 3.25rem;
+$fs-XL: 4rem;
+$fs-XXL: 4.75rem;
+$fs-huge: 6.5rem;
+
+$primary-red: hsl(12, 88%, 59%);
+$primary-blue: hsl(228, 39%, 23%);
+
+$neutral-gray: hsl(227, 12%, 61%);
+$neutral-dark-blue: hsl(233, 12%, 13%);
+$neutral-pale-red: hsl(13, 100%, 96%);
+$neutral-light-gray: hsl(0, 0%, 98%);
+
+$primary-dark: #1d1d20;
+$secondary-dark: #27272b;
+
+$charcoal--500: #405261;
+$charcoal--800: #1d2b36;
+
+.header-primary {
+  font-size: $fs-huge;
+  color: var(--primary-text-color);
+  letter-spacing: 4px;
+  @media (max-width: 600px) {
+    font-size: $fs-XXL;
+  }
+}
+.header-secondary {
+  font-size: $fs-large;
+  color: var(--tertiary-text-color);
+  letter-spacing: 2px;
+  @media (max-width: 600px) {
+    font-size: $fs-large;
+  }
+}
+
+.button-primary {
+  border: none;
+  background-color: $primary-red;
+  font-size: $fs-medium;
+  padding: 0.6rem 2rem;
+  border-radius: 30px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.7s;
+  &:hover {
+    transform: scale(1.05) translateY(-7px);
+    box-shadow: 0 10px 20px rgba(black, 0.2);
+  }
+}
+
+.root {
+  --page-bg-color: #{$neutral-light-gray};
+  --primary-text-color: #{$charcoal--800};
+  --secondary-text-color: #{$charcoal--500};
+  --tertiary-text-color: #{$neutral-dark-blue};
+  --orange-color: #{$primary-red};
+  scroll-behavior: smooth;
+  background-color: rgba(#eaeaea, 0.7);
+}
+
+.dark {
+  --page-bg-color: #{$primary-dark};
+  --primary-text-color: white;
+  --secondary-text-color: #{$primary-red};
+  --tertiary-text-color: #1b9878;
+  animation: test 0.4s forwards;
+  scroll-behavior: smooth;
+}

@@ -1,0 +1,55 @@
+@import "../../../styles/index.module.scss";
+
+.HomePost {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.7s;
+  &__image {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    transition: 2s;
+  }
+  h3 {
+    font-size: $fs-large;
+    color: var(--primary-text-color);
+    margin-top: 2rem;
+  }
+  &__description {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: $fs-medium;
+    color: white;
+    display: none;
+    animation: descriptionAnimations 2s;
+    width: 80%;
+  }
+  &:hover {
+    transform: scale(1.03);
+  }
+  &:hover &__description {
+    display: block;
+  }
+  &:hover &__image {
+    filter: blur(1px) brightness(70%);
+  }
+}
+
+@keyframes descriptionAnimations {
+  0% {
+    opacity: 0;
+    top: 100%;
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}

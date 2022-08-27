@@ -1,0 +1,13 @@
+@import "../../styles/index.module.scss";
+
+.Welcome {
+  h1 {
+    font-size: $fs-XXL;
+    color: var(--primary-text-color);
+  }
+  h3 {
+    font-size: $fs-large;
+    font-weight: 400;
+    color: var(--secondary-text-color);
+  }
+}

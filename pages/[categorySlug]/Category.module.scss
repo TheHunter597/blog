@@ -1,0 +1,13 @@
+.Category {
+  max-width: min(90%, 1100px);
+  margin-top: 10rem;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  gap: 6rem;
+  div {
+    h3 {
+      text-align: center;
+    }
+  }
+}

@@ -1,0 +1,54 @@
+@import "../styles/index.module.scss";
+
+.Home {
+  display: grid;
+  width: min(100%, 1250px);
+  margin-inline: auto;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    " welcome "
+    "recentTitle"
+    "recentPosts"
+    "allTitle"
+    "allPosts";
+  &__welcome {
+    grid-area: welcome;
+    margin-top: 6rem;
+    width: 95%;
+  }
+  &__recentTitle {
+    grid-area: recentTitle;
+    border-bottom: 1px solid var(--secondary-text-color);
+    margin-bottom: 4rem;
+    margin-top: 6rem;
+    h2 {
+      font-size: $fs-extra;
+      letter-spacing: 2px;
+      margin-bottom: 1.2rem;
+      color: var(--tertiary-text-color);
+    }
+  }
+  &__recent {
+    grid-area: recentPosts;
+  }
+  &__allTitle {
+    grid-area: allTitle;
+    border-bottom: 1px solid var(--secondary-text-color);
+    margin-bottom: 4rem;
+    margin-top: 6rem;
+    h2 {
+      font-size: $fs-extra;
+      letter-spacing: 2px;
+      margin-bottom: 1.2rem;
+      color: var(--tertiary-text-color);
+    }
+  }
+  &__allposts {
+    grid-area: allPosts;
+  }
+}
+
+.container {
+  background-color: rgba(#eaeaea, 0.7);
+  width: 100%;
+}

@@ -1,0 +1,66 @@
+@import "../../../styles/index.module.scss";
+
+.Post {
+  display: grid;
+  width: min(90%, 1250px);
+  margin-inline: auto;
+  grid-template-rows: 0.05fr 0.1fr 0.5fr 1fr;
+  grid-template-areas:
+    " . "
+    " info "
+    " image "
+    " content ";
+  &__info {
+    grid-area: info;
+    text-align: center;
+    h3 {
+      font-size: $fs-XXL;
+      color: var(--primary-text-color);
+    }
+    div {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      img {
+        width: 5rem;
+        height: 5rem;
+        border-radius: 50%;
+        border-radius: 10px;
+      }
+      p {
+        font-size: $fs-medium;
+        color: var(--tertiary-text-color);
+        font-weight: 500;
+      }
+      span {
+        font-size: $fs-small;
+        color: var(--secondary-text-color);
+      }
+    }
+  }
+  &__image {
+    padding-top: 7rem;
+    width: 90%;
+    height: 100%;
+    margin-inline: auto;
+    grid-area: image;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  &__content {
+    grid-area: content;
+    max-width: min(80%, 1100px);
+    margin-inline: auto;
+    p {
+      padding-top: 2rem;
+      font-size: $fs-large;
+      word-spacing: 4px;
+      font-weight: 300;
+      color: var(--primary-text-color);
+    }
+  }
+}

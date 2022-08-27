@@ -1,0 +1,16 @@
+.Header {
+  margin-top: 2rem;
+  display: grid;
+  grid-area: recentPosts;
+  grid-template-columns: 0.9fr 0.4fr;
+  grid-template-rows: 0.5fr 0.5fr;
+  grid-template-areas:
+    "main second"
+    "main third";
+  gap: 10px 60px;
+  div {
+    &:first-child {
+      grid-area: main;
+    }
+  }
+}
