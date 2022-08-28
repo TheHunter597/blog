@@ -7,11 +7,15 @@ import { FcSearch } from "react-icons/fc";
 import { FaBars } from "react-icons/fa";
 function Navbar() {
   const contextData = useContext(context) as contextType;
-  const { state, dispatch } = contextData;
+  const { state, dispatch, getCatPosts } = contextData;
   const input = useRef<HTMLInputElement>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSearch, setActiveSearch] = useState(false);
   const [showHeaders, setShowHeaders] = useState(false);
+
+  useEffect(() => {
+    getCatPosts();
+  }, []);
 
   useEffect(() => {
     window.innerWidth < 1000
@@ -30,29 +34,6 @@ function Navbar() {
       );
     };
   }, []);
-
-  let categories = [
-    {
-      name: "Javascript",
-      slug: "javascript",
-    },
-    {
-      name: "Typescript",
-      slug: "typescript",
-    },
-    {
-      name: "Scss",
-      slug: "scss",
-    },
-    {
-      name: "React",
-      slug: "react",
-    },
-    {
-      name: "GraphCMS",
-      slug: "graph-cms",
-    },
-  ];
 
   const dropdownContent = state.posts
     .filter((post) => {
@@ -85,7 +66,7 @@ function Navbar() {
       </div>
       <div className={styles.Navbar__headers}>
         <ul>
-          {categories.map((category) => (
+          {state.categories.categories.map((category) => (
             <li key={category.name}>
               <Link href={`/${category.slug}`}>{category.name}</Link>
             </li>
@@ -173,7 +154,7 @@ function Navbar() {
       {showHeaders ? (
         <div className={styles.Navbar__headers}>
           <ul>
-            {categories.map((category) => (
+            {state.categories.categories.map((category) => (
               <li key={category.slug} onClick={() => setShowHeaders(false)}>
                 <Link href={`/${category.slug}`}>{category.name}</Link>
               </li>

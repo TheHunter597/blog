@@ -18,18 +18,9 @@ interface props {
 }
 
 function Home(props: props) {
-  let { latestPosts, allPosts, categoriesData } = props;
+  let { latestPosts, allPosts } = props;
 
   const contextData = useContext(context) as contextType;
-  const { dispatch, state } = contextData;
-  useEffect(() => {
-    dispatch({ type: actionTypes.CHANGE_POSTS, value: allPosts.posts });
-    dispatch({
-      type: actionTypes.CHANGE_CATEGORIES_DATA,
-      value: categoriesData,
-    });
-  }, []);
-
   return (
     <>
       <Head>
@@ -60,12 +51,10 @@ function Home(props: props) {
 export async function getStaticProps() {
   let latestPosts = (await getLatestPosts()) || [];
   let allPosts = (await getPostsData()) || [];
-  let categoriesData = (await getCategoriesData()) || [];
   return {
     props: {
       latestPosts: latestPosts.posts,
       allPosts: allPosts,
-      categoriesData: categoriesData,
     },
     revalidate: 30,
   };

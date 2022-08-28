@@ -1,5 +1,7 @@
 import { createContext, useReducer } from "react";
 import { actionTypes, state, contextType } from "../utilitis/types";
+import { getPostsData } from "../data/getPostsData";
+import { getCategoriesData } from "../data/getCategoriesData";
 interface props {
   children: JSX.Element;
 }
@@ -34,8 +36,18 @@ function reducer(state: state, action: action): state {
 export function ContextProvider(props: props) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  async function getCatPosts() {
+    let allPosts = (await getPostsData()) || [];
+    let categoriesData = (await getCategoriesData()) || [];
+    dispatch({ type: actionTypes.CHANGE_POSTS, value: await allPosts.posts });
+    dispatch({
+      type: actionTypes.CHANGE_CATEGORIES_DATA,
+      value: categoriesData,
+    });
+  }
+
   return (
-    <context.Provider value={{ state, dispatch }}>
+    <context.Provider value={{ state, dispatch, getCatPosts }}>
       {props.children}
     </context.Provider>
   );

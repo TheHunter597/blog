@@ -38,4 +38,5 @@ export type dispatch = ({
 export interface contextType {
   state: state;
   dispatch: dispatch;
+  getCatPosts: Function;
 }
