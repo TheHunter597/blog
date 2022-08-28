@@ -101,6 +101,13 @@ function Navbar() {
           ""
         )}
       </div>
+      <div className={styles.Navbar__SignUp}>
+        <ul>
+          <li>
+            <Link href="/sign">Sign Up</Link>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 
@@ -154,6 +161,9 @@ function Navbar() {
       {showHeaders ? (
         <div className={styles.Navbar__headers}>
           <ul>
+            <li onClick={() => setShowHeaders(false)}>
+              <Link href="/sign">Sign Up</Link>
+            </li>
             {state.categories.categories.map((category) => (
               <li key={category.slug} onClick={() => setShowHeaders(false)}>
                 <Link href={`/${category.slug}`}>{category.name}</Link>

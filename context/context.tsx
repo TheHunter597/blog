@@ -17,6 +17,13 @@ const initialState: state = {
   posts: [],
   categories: { categories: [] },
   phoneUser: false,
+  signIn: false,
+  signUp: {
+    SignUpUsernameError: false,
+    SignUpPasswordError: false,
+    emailError: false,
+    errorMessage: "",
+  },
 };
 
 function reducer(state: state, action: action): state {
@@ -28,6 +35,22 @@ function reducer(state: state, action: action): state {
       return { ...state, categories: value };
     case actionTypes.CHANGE_PHONE_USER:
       return { ...state, phoneUser: value };
+    case actionTypes.CHANGE_SIGN_IN:
+      return { ...state, signIn: value };
+    case actionTypes.CHNAGE_SIGN_UP_USERNAME_ERROR:
+      return {
+        ...state,
+        signUp: { ...state.signUp, SignUpUsernameError: value },
+      };
+    case actionTypes.CHNAGE_SIGN_UP_PASSWORD_ERROR:
+      return {
+        ...state,
+        signUp: { ...state.signUp, SignUpPasswordError: value },
+      };
+    case actionTypes.CHNAGE_SIGN_UP_EMAIL_ERROR:
+      return { ...state, signUp: { ...state.signUp, emailError: value } };
+    case actionTypes.CHANGE_ERROR_MESSAGE:
+      return { ...state, signUp: { ...state.signUp, errorMessage: value } };
     default:
       return state;
   }
