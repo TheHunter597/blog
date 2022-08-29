@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import context from "../../context/context";
 import styles from "./Sign.module.scss";
 import { actionTypes, contextType } from "../../utilitis/types";
-import { auth } from "./firebase-config";
+import { auth } from "../../utilitis/firebase-config";
 import * as EmailValidator from "email-validator";
 import SignUp from "../../components/sign/SignUp";
 import SignIn from "../../components/sign/SignIn";
