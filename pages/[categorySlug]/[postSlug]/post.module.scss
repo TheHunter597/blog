@@ -4,7 +4,7 @@
   display: grid;
   width: min(90%, 1250px);
   margin-inline: auto;
-  grid-template-rows: 0.05fr 0.1fr 650px auto;
+  grid-template-rows: 100px 200px 650px auto;
   grid-template-areas:
     " . "
     " info "
@@ -12,7 +12,7 @@
     " content ";
   @media (max-width: 800px) {
     display: grid;
-    grid-template-rows: 0.05fr 0.2fr 400px 1fr;
+    grid-template-rows: 50px 300px 400px 1fr;
   }
   &__info {
     grid-area: info;
@@ -76,5 +76,37 @@
         color: var(--orange-color);
       }
     }
+  }
+  &__addFav {
+    font-size: 5rem;
+    position: absolute;
+    top: 43%;
+    right: 15%;
+    @media (max-width: 600px) {
+      top: 10%;
+      right: 10%;
+    }
+    color: var(--orange-color);
+    width: 4rem;
+    outline: none;
+    cursor: pointer;
+    figure {
+      svg {
+        animation: addTofav 1.5s ease-out;
+      }
+    }
+  }
+}
+
+@keyframes addTofav {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }

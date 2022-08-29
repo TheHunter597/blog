@@ -4,7 +4,7 @@ import { headerPosts, contextType, actionTypes } from "../../utilitis/types";
 import HomePost from "../../components/Home/HomePost/HomePost";
 import { getCategoryData } from "../../data/getCategoryData";
 import Head from "next/head";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import context from "../../context/context";
 
 interface category {

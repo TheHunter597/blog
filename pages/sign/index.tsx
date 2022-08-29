@@ -6,7 +6,7 @@ import { auth } from "../../utilitis/firebase-config";
 import * as EmailValidator from "email-validator";
 import SignUp from "../../components/sign/SignUp";
 import SignIn from "../../components/sign/SignIn";
-
+import { getFavsList } from "../../data/getFavsList";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
@@ -161,8 +161,8 @@ function Sign() {
         });
         SignInErrorMessage.innerHTML = "";
 
-        dispatch({ type: actionTypes.CHANGE_SIGNED_IN, value: true });
         const UserData = await getSignedInUserData(loginEmail);
+        dispatch({ type: actionTypes.CHANGE_SIGNED_IN, value: true });
 
         dispatch({
           type: actionTypes.CHANGE_SIGNED_IN_USERNAME,
@@ -172,6 +172,21 @@ function Sign() {
           type: actionTypes.CHANGE_SIGNED_IN_EMAIL,
           value: UserData.userdatabase.email,
         });
+        let favData = (await getFavsList(loginEmail)) || [];
+        dispatch({
+          type: actionTypes.SET_USER_FAVS_LIST,
+          value:
+            favData.userdatabase.favs === null ? [] : favData.userdatabase.favs,
+        });
+
+        localStorage.setItem("SignedIn", "true");
+        localStorage.setItem("Username", UserData.userdatabase.username);
+        localStorage.setItem("Email", UserData.userdatabase.email);
+        // localStorage.setItem(
+        //   "favs",
+        //   favData.userdatabase.favs === null ? [] : favData.userdatabase.favs
+        // );
+
         setTimeout(() => {
           router.push("/");
         }, 100);
