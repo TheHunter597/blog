@@ -1,6 +1,6 @@
 import styles from "./favs.module.scss";
 import context from "../../context/context";
-import { contextType, headerPosts } from "../../utilitis/types";
+import { contextType } from "../../utilitis/types";
 import { useContext } from "react";
 import HomePost from "../../components/Home/HomePost/HomePost";
 import { useRouter } from "next/router";
