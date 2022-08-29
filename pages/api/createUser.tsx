@@ -23,6 +23,9 @@ export default async function createUser(
         username
         password
       }
+      publishUserdatabase(where: { email: $email }) {
+        id
+      }
     }
   `;
 
@@ -31,9 +34,9 @@ export default async function createUser(
     res.status(200).json({ message: "User created sucessfully" });
     return result;
   } catch (e) {
+    res.status(400).json({ message: "User already exists" });
     console.log(e);
 
-    res.status(400).json(e);
     return e;
   }
 }

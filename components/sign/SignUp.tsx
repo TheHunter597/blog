@@ -7,24 +7,37 @@ interface props {
   setSignUpusername: Function;
   setSignUppassword: Function;
   setEmail: Function;
+  setSignInUpSwitcher: Function;
 }
 
 function SignUp(props: props) {
-  const { addUser, setSignUpusername, setSignUppassword, setEmail } = props;
+  const {
+    addUser,
+    setSignUpusername,
+    setSignUppassword,
+    setEmail,
+    setSignInUpSwitcher,
+  } = props;
   const data = useContext(context);
   const { state, dispatch } = data as contextType;
   const { SignUpUsernameError, SignUpPasswordError, emailError } = state.signUp;
-  const SignUpusername = useRef<HTMLInputElement>(null);
+  let SignUpusername = useRef<HTMLInputElement>(null);
   const SignUppassword = useRef<HTMLInputElement>(null);
-  const email = useRef<HTMLInputElement>(null);
+  const SignUpemail = useRef<HTMLInputElement>(null);
   useEffect(() => {
-    setSignUpusername(SignUpusername);
-    setSignUppassword(SignUppassword);
-    setEmail(email);
+    dispatch({
+      type: actionTypes.CHANGE_SIGN_UP_ERROR_MESSAGE,
+      value: document.querySelector("#signUpError") as HTMLElement,
+    });
+  }, []);
+  useEffect(() => {
+    setSignUpusername(SignUpusername.current);
+    setSignUppassword(SignUppassword.current);
+    setEmail(SignUpemail);
   }, [
     SignUpusername.current?.value,
     SignUppassword.current?.value,
-    email.current?.value,
+    SignUpemail.current?.value,
   ]);
   return (
     <form
@@ -54,26 +67,16 @@ function SignUp(props: props) {
         <div>
           <input
             type="text"
-            ref={email}
+            ref={SignUpemail}
             placeholder="E-mail"
             className={emailError ? styles.error : ""}
           />
         </div>
         <div className={styles.Sign__confirm}>
           <h4>
-            Or{" "}
-            <span
-              onClick={() =>
-                dispatch({
-                  type: actionTypes.CHANGE_SIGN_IN,
-                  value: true,
-                })
-              }
-            >
-              sign in
-            </span>
+            Or <span onClick={() => setSignInUpSwitcher(true)}>sign in</span>
           </h4>
-          <small id="error" className={styles.Sign__error}></small>
+          <small id="signUpError" className={styles.Sign__error}></small>
           <button>Confirm</button>
         </div>
       </div>

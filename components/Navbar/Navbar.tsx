@@ -34,6 +34,8 @@ function Navbar() {
       );
     };
   }, []);
+  console.log(state.signedIn.isSignedIn);
+  console.log(state);
 
   const dropdownContent = state.posts
     .filter((post) => {
@@ -103,13 +105,20 @@ function Navbar() {
       </div>
       <div className={styles.Navbar__SignUp}>
         <ul>
-          <li>
-            <Link href="/sign">Sign Up</Link>
-          </li>
+          {!state.signedIn.isSignedIn ? (
+            <li>
+              <Link href="/sign">Sign Up</Link>
+            </li>
+          ) : (
+            <Link href="/">
+              <a>{state.signedIn.username}</a>
+            </Link>
+          )}
         </ul>
       </div>
     </div>
   );
+  console.log(state.signedIn.isSignedIn);
 
   const smallerScreenNav = (
     <div className={styles.Navbar}>
@@ -162,7 +171,13 @@ function Navbar() {
         <div className={styles.Navbar__headers}>
           <ul>
             <li onClick={() => setShowHeaders(false)}>
-              <Link href="/sign">Sign Up</Link>
+              {!state.signedIn.isSignedIn ? (
+                <Link href="/sign">Sign Up</Link>
+              ) : (
+                <Link href="/">
+                  <a>{state.signedIn.username}</a>
+                </Link>
+              )}
             </li>
             {state.categories.categories.map((category) => (
               <li key={category.slug} onClick={() => setShowHeaders(false)}>

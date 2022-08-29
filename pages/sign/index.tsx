@@ -2,46 +2,50 @@ import { useContext, useEffect, useState } from "react";
 import context from "../../context/context";
 import styles from "./Sign.module.scss";
 import { actionTypes, contextType } from "../../utilitis/types";
-
+import { auth } from "./firebase-config";
 import * as EmailValidator from "email-validator";
 import SignUp from "../../components/sign/SignUp";
 import SignIn from "../../components/sign/SignIn";
 
-function Signup() {
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { useRouter } from "next/router";
+import { getSignedInUserData } from "../../data/getSignedInUserData";
+
+function Sign() {
   const [SignUpusername, setSignUpusername] = useState<any>();
   const [SignUppassword, setSignUppassword] = useState<any>();
   const [email, setEmail] = useState<any>();
-  useEffect(() => {
-    dispatch({
-      type: actionTypes.CHANGE_ERROR_MESSAGE,
-      value: document.querySelector("#error") as HTMLElement,
-    });
-  }, []);
-
+  const [signInUpSwitcher, setSignInUpSwitcher] = useState(false);
   const data = useContext(context);
   const { state, dispatch } = data as contextType;
-  const { signIn } = state;
-  const { errorMessage } = state.signUp;
+  const { SignInErrorMessage } = state.signIn;
+  const { SignUpErrorMessage } = state.signUp;
   const { phoneUser } = state;
+  const router = useRouter();
   function restErrors() {
     dispatch({
-      type: actionTypes.CHNAGE_SIGN_UP_EMAIL_ERROR,
+      type: actionTypes.CHANGE_SIGN_UP_EMAIL_ERROR,
       value: false,
     });
     dispatch({
-      type: actionTypes.CHNAGE_SIGN_UP_USERNAME_ERROR,
+      type: actionTypes.CHANGE_SIGN_UP_USERNAME_ERROR,
       value: false,
     });
     dispatch({
-      type: actionTypes.CHNAGE_SIGN_UP_PASSWORD_ERROR,
+      type: actionTypes.CHANGE_SIGN_UP_PASSWORD_ERROR,
       value: false,
     });
   }
   async function addUser() {
     const data = {
-      username: SignUpusername.current?.value,
-      password: SignUppassword.current?.value,
-      email: email.current?.value,
+      username: SignUpusername.value,
+      password: SignUppassword.value,
+      email: email.current.value,
     };
     if (
       !data.username ||
@@ -49,10 +53,11 @@ function Signup() {
       data.username.length > 25
     ) {
       dispatch({
-        type: actionTypes.CHNAGE_SIGN_UP_USERNAME_ERROR,
+        type: actionTypes.CHANGE_SIGN_UP_USERNAME_ERROR,
         value: true,
       });
-      errorMessage.innerHTML = "Username should be between 8 and 25 letters";
+      SignUpErrorMessage.innerHTML =
+        "Username should be between 8 and 25 letters";
       return;
     } else if (
       !data.password ||
@@ -60,30 +65,31 @@ function Signup() {
       data.password.length > 40
     ) {
       dispatch({
-        type: actionTypes.CHNAGE_SIGN_UP_PASSWORD_ERROR,
+        type: actionTypes.CHANGE_SIGN_UP_PASSWORD_ERROR,
         value: true,
       });
       dispatch({
-        type: actionTypes.CHNAGE_SIGN_UP_USERNAME_ERROR,
+        type: actionTypes.CHANGE_SIGN_UP_USERNAME_ERROR,
         value: false,
       });
-      errorMessage.innerHTML = "Password should be between 8 and 40 letters";
+      SignUpErrorMessage.innerHTML =
+        "Password should be between 8 and 40 letters";
 
       return;
     } else if (!data.email || EmailValidator.validate(data.email) != true) {
       dispatch({
-        type: actionTypes.CHNAGE_SIGN_UP_EMAIL_ERROR,
+        type: actionTypes.CHANGE_SIGN_UP_EMAIL_ERROR,
         value: true,
       });
       dispatch({
-        type: actionTypes.CHNAGE_SIGN_UP_USERNAME_ERROR,
+        type: actionTypes.CHANGE_SIGN_UP_USERNAME_ERROR,
         value: false,
       });
       dispatch({
-        type: actionTypes.CHNAGE_SIGN_UP_PASSWORD_ERROR,
+        type: actionTypes.CHANGE_SIGN_UP_PASSWORD_ERROR,
         value: false,
       });
-      errorMessage.innerHTML = "Invalid Email";
+      SignUpErrorMessage.innerHTML = "Invalid Email";
       return;
     } else {
       restErrors();
@@ -94,54 +100,124 @@ function Signup() {
           "Content-Type": "application/json",
         },
       });
-      console.log(result);
 
       if (!result.ok) {
-        errorMessage.innerHTML = "Email has been used before ";
+        SignUpErrorMessage.innerHTML = "Email has been used before ";
         dispatch({
-          type: actionTypes.CHNAGE_SIGN_UP_EMAIL_ERROR,
+          type: actionTypes.CHANGE_SIGN_UP_EMAIL_ERROR,
           value: true,
         });
       } else if (result.ok) {
-        errorMessage.innerHTML = "You have Signed up sucessfully ";
+        try {
+          const newUser = await createUserWithEmailAndPassword(
+            auth,
+            data.email,
+            data.password
+          );
+        } catch (e) {
+          return;
+        }
+
+        await sendEmailVerification(auth.currentUser!);
+        SignUpErrorMessage.innerHTML =
+          "You have Signed up sucessfully please check your email for vertification link";
         setTimeout(() => {
-          dispatch({ type: actionTypes.CHANGE_SIGN_IN, value: true });
-          if (
-            SignUpusername.current &&
-            SignUppassword.current &&
-            email.current
-          ) {
-            SignUpusername.current.value = "";
-            SignUppassword.current.value = "";
+          if (SignUpusername && SignUppassword && email.current) {
+            SignUpusername.value = "";
+            SignUppassword.value = "";
             email.current.value = "";
           }
-        }, 1000);
+        }, 500);
       }
 
       return result;
+    }
+  }
+  async function userSignIn(loginEmail: string, loginpassword: string) {
+    try {
+      const user = await signInWithEmailAndPassword(
+        auth,
+        loginEmail,
+        loginpassword
+      );
+      if (!user.user.emailVerified) {
+        dispatch({
+          type: actionTypes.CHANGE_SIGN_IN_EMAIL_ERROR,
+          value: false,
+        });
+        dispatch({
+          type: actionTypes.CHANGE_SIGN_IN_PASSWORD_ERROR,
+          value: false,
+        });
+        SignInErrorMessage.innerHTML = "Please verify your email and try again";
+      } else {
+        dispatch({
+          type: actionTypes.CHANGE_SIGN_IN_EMAIL_ERROR,
+          value: false,
+        });
+        dispatch({
+          type: actionTypes.CHANGE_SIGN_IN_PASSWORD_ERROR,
+          value: false,
+        });
+        SignInErrorMessage.innerHTML = "";
+
+        dispatch({ type: actionTypes.CHANGE_SIGNED_IN, value: true });
+        const UserData = await getSignedInUserData(loginEmail);
+
+        dispatch({
+          type: actionTypes.CHANGE_SIGNED_IN_USERNAME,
+          value: UserData.userdatabase.username,
+        });
+        dispatch({
+          type: actionTypes.CHANGE_SIGNED_IN_EMAIL,
+          value: UserData.userdatabase.email,
+        });
+        setTimeout(() => {
+          router.push("/");
+        }, 100);
+      }
+    } catch (e) {
+      dispatch({
+        type: actionTypes.CHANGE_SIGN_IN_EMAIL_ERROR,
+        value: true,
+      });
+      dispatch({
+        type: actionTypes.CHANGE_SIGN_IN_PASSWORD_ERROR,
+        value: true,
+      });
+      SignInErrorMessage.innerHTML =
+        "Username or Password is incorret please try again";
     }
   }
   return (
     <div className={`${styles.Sign}`}>
       <div
         className={`${styles.Sign__content} ${
-          !signIn ? styles.Sign__content_up : ""
+          !signInUpSwitcher ? styles.Sign__content_up : ""
         }`}
       >
-        {!phoneUser || (phoneUser && !signIn) ? (
+        {!phoneUser || (phoneUser && !signInUpSwitcher) ? (
           <SignUp
             addUser={addUser}
             setEmail={setEmail}
             setSignUpusername={setSignUpusername}
             setSignUppassword={setSignUppassword}
+            setSignInUpSwitcher={setSignInUpSwitcher}
           />
         ) : (
           ""
         )}
-        {!phoneUser || (phoneUser && signIn) ? <SignIn /> : ""}
+        {!phoneUser || (phoneUser && signInUpSwitcher) ? (
+          <SignIn
+            userSignIn={userSignIn}
+            setSignInUpSwitcher={setSignInUpSwitcher}
+          />
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );
 }
 
-export default Signup;
+export default Sign;
