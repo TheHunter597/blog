@@ -163,7 +163,7 @@ function Sign() {
 
         // const UserData = await getSignedInUserData(loginEmail);
 
-        onAuthStateChanged(auth, async () => {
+        onAuthStateChanged(auth, async (user) => {
           const UserData = await getSignedInUserData(loginEmail);
           dispatch({
             type: actionTypes.CHANGE_SIGNED_IN_USERNAME,
@@ -171,9 +171,12 @@ function Sign() {
           });
           dispatch({
             type: actionTypes.CHANGE_SIGNED_IN_EMAIL,
-            value: UserData.userdatabase.email,
+            value: user?.email,
           });
-          dispatch({ type: actionTypes.CHANGE_SIGNED_IN, value: true });
+          dispatch({
+            type: actionTypes.CHANGE_SIGNED_IN,
+            value: user?.email ? true : false,
+          });
         });
 
         // dispatch({
