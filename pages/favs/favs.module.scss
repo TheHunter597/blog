@@ -4,18 +4,32 @@
   max-width: min(90%, 1100px);
   padding-top: 10rem;
   margin-inline: auto;
+  min-height: 100vh;
   @media (max-width: 800px) {
     display: grid;
     grid-template-columns: 100%;
     margin-inline: auto;
   }
-  h3 {
-    text-align: center;
-    font-size: $fs-XL;
-  }
-  div {
+  &__content {
     display: grid;
-    grid-template-columns: 50% 50%;
-    gap: 6rem;
+    grid-template-columns: 45% 45%;
+    gap: 40px;
+  }
+  h4 {
+    font-size: $fs-XL;
+    color: var(--primary-text-color);
+    text-align: center;
+  }
+  h2 {
+    text-align: center;
+    font-size: $fs-huge;
+    color: var(--primary-text-color);
+    @media (max-width: 600px) {
+      font-size: $fs-XXL;
+    }
+    span {
+      color: var(--orange-color);
+      cursor: pointer;
+    }
   }
 }

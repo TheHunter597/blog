@@ -173,20 +173,19 @@ function Sign() {
           value: UserData.userdatabase.email,
         });
         let favData = (await getFavsList(loginEmail)) || [];
-        dispatch({
-          type: actionTypes.SET_USER_FAVS_LIST,
-          value:
-            favData.userdatabase.favs === null ? [] : favData.userdatabase.favs,
-        });
-
+        if (favData != []) {
+          dispatch({
+            type: actionTypes.SET_USER_FAVS_LIST,
+            value: favData.userdatabase.favs,
+          });
+          localStorage.setItem(
+            "favs",
+            JSON.stringify(favData.userdatabase.favs)
+          );
+        }
         localStorage.setItem("SignedIn", "true");
         localStorage.setItem("Username", UserData.userdatabase.username);
         localStorage.setItem("Email", UserData.userdatabase.email);
-        // localStorage.setItem(
-        //   "favs",
-        //   favData.userdatabase.favs === null ? [] : favData.userdatabase.favs
-        // );
-
         setTimeout(() => {
           router.push("/");
         }, 100);

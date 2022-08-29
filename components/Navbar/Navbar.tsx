@@ -124,8 +124,18 @@ function Navbar() {
                 </Link>
                 {openUserMenu ? (
                   <ul className={styles.Navbar__userDropdown}>
-                    <li>Fav list</li>
-                    <li>Create post</li>
+                    <li>
+                      <Link href="/favs">Favs list</Link>
+                    </li>
+                    <li
+                      onClick={() => {
+                        window.alert(
+                          "Only admin can create posts keep tuned for new updates :)"
+                        );
+                      }}
+                    >
+                      Create post
+                    </li>
                     <li onClick={signOut}>Sign out</li>
                   </ul>
                 ) : (
@@ -201,16 +211,24 @@ function Navbar() {
                 <Link href={`/${category.slug}`}>{category.name}</Link>
               </li>
             ))}
-            <li onClick={() => setShowHeaders(false)}>Favs list </li>
-            <li onClick={() => setShowHeaders(false)}>Create post </li>
-            <li
-              onClick={() => {
-                signOut;
-                setShowHeaders(false);
-              }}
-            >
-              Sign out
-            </li>
+            {state.signedIn.isSignedIn ? (
+              <>
+                <li onClick={() => setShowHeaders(false)}>
+                  <Link href="/favs">Favs list</Link>{" "}
+                </li>
+                <li onClick={() => setShowHeaders(false)}>Create post </li>
+                <li
+                  onClick={() => {
+                    signOut();
+                    setShowHeaders(false);
+                  }}
+                >
+                  Sign out
+                </li>
+              </>
+            ) : (
+              ""
+            )}
           </ul>
         </div>
       ) : (

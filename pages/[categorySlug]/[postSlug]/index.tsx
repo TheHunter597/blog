@@ -25,6 +25,7 @@ interface props {
       content: {
         html: string;
       };
+      categories: [];
       coverImage: { url: string };
       author: { name: string; picture: { url: string } | null };
     };
@@ -35,7 +36,16 @@ function Post(props: props) {
   const contextData = useContext(context);
   const { state, dispatch } = contextData as contextType;
   let { data } = props;
-  const { coverImage, title, date, content, author, slug } = data.post;
+  const {
+    coverImage,
+    title,
+    date,
+    content,
+    author,
+    slug,
+    excerpt,
+    categories,
+  } = data.post;
   const [favourited, setFavourited] = useState(false);
 
   useEffect(() => {
@@ -69,11 +79,12 @@ function Post(props: props) {
               });
 
               if (!duplicate) {
+                let newList = [...state.signedIn.favs, { title, slug }];
                 dispatch({
                   type: actionTypes.ADD_FAVS_LIST,
-                  value: { title, slug },
+                  value: { title, slug, excerpt, categories, coverImage },
                 });
-
+                localStorage.setItem("favs", JSON.stringify(newList));
                 const result = fetch("/api/addToFavList", {
                   method: "POST",
                   body: JSON.stringify({
@@ -87,12 +98,15 @@ function Post(props: props) {
                   return res;
                 });
               } else {
+                const newList = state.signedIn.favs.filter((entry) => {
+                  return entry.slug != slug;
+                });
                 dispatch({
                   type: actionTypes.REMOVE_FAVS_LIST,
-                  value: state.signedIn.favs.filter((entry) => {
-                    return entry.slug != slug;
-                  }),
+                  value: newList,
                 });
+                localStorage.setItem("favs", JSON.stringify(newList));
+
                 const result = fetch("/api/removeFromFavList", {
                   method: "POST",
                   body: JSON.stringify({

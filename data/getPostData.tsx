@@ -12,6 +12,9 @@ export async function getPostData(slug: string) {
       excerpt
       slug
       title
+      categories {
+      slug
+      }
       content {
         html
       }

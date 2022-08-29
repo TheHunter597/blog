@@ -23,6 +23,7 @@
     @media (max-width: 1000px) {
       width: 90%;
       margin-inline: auto;
+      min-height: 75vh;
     }
     &::after {
       content: "";
@@ -112,6 +113,7 @@
     align-items: center;
     h4 {
       font-size: $fs-medium;
+      text-align: center;
       span {
         color: var(--secondary-text-color);
         cursor: pointer;

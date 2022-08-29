@@ -47,7 +47,8 @@ function SignIn(props: props) {
         </div>
         <div className={styles.Sign__confirm}>
           <h4>
-            Or <span onClick={() => setSignInUpSwitcher(false)}>sign up</span>
+            Dont have an account, Create one now{" "}
+            <span onClick={() => setSignInUpSwitcher(false)}>sign up</span>
           </h4>
           <small className={styles.Sign__error} id="signInError"></small>
           <button

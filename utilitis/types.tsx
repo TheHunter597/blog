@@ -59,7 +59,13 @@ export interface state {
     isSignedIn: boolean;
     username: string;
     email: string;
-    favs: { slug: string; title: string }[];
+    favs: {
+      slug: string;
+      title: string;
+      excerpt: string;
+      categories: [{ slug: string }];
+      coverImage: { url: string };
+    }[];
   };
 }
 
