@@ -27,10 +27,18 @@ export enum actionTypes {
   CHANGE_SIGNED_IN = "CHANGE_SIGN_IN",
   CHANGE_SIGNED_IN_USERNAME = "CHANE_SIGNED_IN_USERNAME",
   CHANGE_SIGNED_IN_EMAIL = "CHANGE_SIGNED_IN_EMAIL",
+  ADD_FAVS_LIST = "CHANGE_FAVS_LIST",
+  REMOVE_FAVS_LIST = "REMOVE_FAVS_LIST",
+  SET_USER_FAVS_LIST = "SET_USER_FAVS_LIST",
 }
 
 export interface state {
-  posts: { title: string; slug: string; categories: { slug: string }[] }[];
+  posts: {
+    title: string;
+    slug: string;
+    excerpt: string;
+    categories: { slug: string }[];
+  }[];
   categories: {
     categories: { name: string; slug: string; posts: { excerpt: string }[] }[];
   };
@@ -51,6 +59,7 @@ export interface state {
     isSignedIn: boolean;
     username: string;
     email: string;
+    favs: { slug: string; title: string }[];
   };
 }
 
@@ -66,4 +75,5 @@ export interface contextType {
   state: state;
   dispatch: dispatch;
   getCatPosts: Function;
+  signOut: () => void;
 }

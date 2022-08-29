@@ -1,7 +1,8 @@
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import { actionTypes, state, contextType } from "../utilitis/types";
 import { getPostsData } from "../data/getPostsData";
 import { getCategoriesData } from "../data/getCategoriesData";
+import { useRouter } from "next/router";
 interface props {
   children: JSX.Element;
 }
@@ -33,11 +34,13 @@ const initialState: state = {
     isSignedIn: false,
     username: "",
     email: "",
+    favs: [],
   },
 };
 
 function reducer(state: state, action: action): state {
   const { value } = action;
+
   switch (action.type) {
     case actionTypes.CHANGE_POSTS:
       return { ...state, posts: value };
@@ -80,6 +83,15 @@ function reducer(state: state, action: action): state {
       return { ...state, signedIn: { ...state.signedIn, username: value } };
     case actionTypes.CHANGE_SIGNED_IN_EMAIL:
       return { ...state, signedIn: { ...state.signedIn, email: value } };
+    case actionTypes.ADD_FAVS_LIST:
+      return {
+        ...state,
+        signedIn: { ...state.signedIn, favs: [...state.signedIn.favs, value] },
+      };
+    case actionTypes.REMOVE_FAVS_LIST:
+      return { ...state, signedIn: { ...state.signedIn, favs: value } };
+    case actionTypes.SET_USER_FAVS_LIST:
+      return { ...state, signedIn: { ...state.signedIn, favs: value } };
     default:
       return state;
   }
@@ -87,7 +99,32 @@ function reducer(state: state, action: action): state {
 
 export function ContextProvider(props: props) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log(state.signedIn.username);
+  const router = useRouter();
+  useEffect(() => {
+    if (localStorage.getItem("SignedIn") == "true") {
+      dispatch({ type: actionTypes.CHANGE_SIGNED_IN, value: true });
+      dispatch({
+        type: actionTypes.CHANGE_SIGNED_IN_USERNAME,
+        value: localStorage.getItem("Username"),
+      });
+      dispatch({
+        type: actionTypes.CHANGE_SIGNED_IN_EMAIL,
+        value: localStorage.getItem("Email"),
+      });
+      dispatch({
+        type: actionTypes.SET_USER_FAVS_LIST,
+        value: localStorage.getItem("favs"),
+      });
+      // dispatch({
+      //   type: actionTypes.SET_USER_FAVS_LIST,
+      //   value:
+      //     localStorage.getItem("favs") === null
+      //       ? []
+      //       : localStorage.getItem("favs"),
+      // });
+    }
+  }, [state.signedIn.isSignedIn]);
+  console.log(state);
 
   async function getCatPosts() {
     let allPosts = (await getPostsData()) || [];
@@ -99,8 +136,19 @@ export function ContextProvider(props: props) {
     });
   }
 
+  function signOut() {
+    localStorage.removeItem("SignedIn");
+    localStorage.removeItem("Username");
+    localStorage.removeItem("Email");
+    localStorage.removeItem("favs");
+
+    setTimeout(() => {
+      location.reload();
+      router.push("/");
+    }, 500);
+  }
   return (
-    <context.Provider value={{ state, dispatch, getCatPosts }}>
+    <context.Provider value={{ state, dispatch, getCatPosts, signOut }}>
       {props.children}
     </context.Provider>
   );

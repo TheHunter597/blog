@@ -1,0 +1,21 @@
+@import "../../styles/index.module.scss";
+
+.Favs {
+  max-width: min(90%, 1100px);
+  padding-top: 10rem;
+  margin-inline: auto;
+  @media (max-width: 800px) {
+    display: grid;
+    grid-template-columns: 100%;
+    margin-inline: auto;
+  }
+  h3 {
+    text-align: center;
+    font-size: $fs-XL;
+  }
+  div {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    gap: 6rem;
+  }
+}

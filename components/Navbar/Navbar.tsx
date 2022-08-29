@@ -7,11 +7,12 @@ import { FcSearch } from "react-icons/fc";
 import { FaBars } from "react-icons/fa";
 function Navbar() {
   const contextData = useContext(context) as contextType;
-  const { state, dispatch, getCatPosts } = contextData;
+  const { state, dispatch, getCatPosts, signOut } = contextData;
   const input = useRef<HTMLInputElement>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSearch, setActiveSearch] = useState(false);
   const [showHeaders, setShowHeaders] = useState(false);
+  const [openUserMenu, setOpenUserMenu] = useState(false);
 
   useEffect(() => {
     getCatPosts();
@@ -34,8 +35,6 @@ function Navbar() {
       );
     };
   }, []);
-  console.log(state.signedIn.isSignedIn);
-  console.log(state);
 
   const dropdownContent = state.posts
     .filter((post) => {
@@ -103,22 +102,42 @@ function Navbar() {
           ""
         )}
       </div>
-      <div className={styles.Navbar__SignUp}>
+      <div
+        className={styles.Navbar__SignUp}
+        onMouseEnter={() =>
+          state.signedIn.isSignedIn ? setOpenUserMenu(true) : ""
+        }
+        onMouseLeave={() =>
+          state.signedIn.isSignedIn ? setOpenUserMenu(false) : ""
+        }
+      >
         <ul>
           {!state.signedIn.isSignedIn ? (
             <li>
               <Link href="/sign">Sign Up</Link>
             </li>
           ) : (
-            <Link href="/">
-              <a>{state.signedIn.username}</a>
-            </Link>
+            <>
+              <li>
+                <Link href="/">
+                  <a>{state.signedIn.username}</a>
+                </Link>
+                {openUserMenu ? (
+                  <ul className={styles.Navbar__userDropdown}>
+                    <li>Fav list</li>
+                    <li>Create post</li>
+                    <li onClick={signOut}>Sign out</li>
+                  </ul>
+                ) : (
+                  ""
+                )}
+              </li>
+            </>
           )}
         </ul>
       </div>
     </div>
   );
-  console.log(state.signedIn.isSignedIn);
 
   const smallerScreenNav = (
     <div className={styles.Navbar}>
@@ -174,9 +193,7 @@ function Navbar() {
               {!state.signedIn.isSignedIn ? (
                 <Link href="/sign">Sign Up</Link>
               ) : (
-                <Link href="/">
-                  <a>{state.signedIn.username}</a>
-                </Link>
+                <span>{state.signedIn.username}</span>
               )}
             </li>
             {state.categories.categories.map((category) => (
@@ -184,6 +201,16 @@ function Navbar() {
                 <Link href={`/${category.slug}`}>{category.name}</Link>
               </li>
             ))}
+            <li onClick={() => setShowHeaders(false)}>Favs list </li>
+            <li onClick={() => setShowHeaders(false)}>Create post </li>
+            <li
+              onClick={() => {
+                signOut;
+                setShowHeaders(false);
+              }}
+            >
+              Sign out
+            </li>
           </ul>
         </div>
       ) : (
