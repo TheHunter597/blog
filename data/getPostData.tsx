@@ -1,11 +1,6 @@
-// import { gql, request } from "graphql-request";
-
-// const graphqlAPI = process.env.GRAPHQL_API_KEY as string;
-
 import { gql } from "graphql-request";
 import { GraphQLClient } from "graphql-request";
-const endpoint =
-  "https://api-us-east-1.hygraph.com/v2/cl78bu1o60r3p01um8er1bb3c/master";
+const endpoint = process.env.NEXT_PUBLIC_HYGRAPH_ENDPOINT as string;
 
 export async function getPostData(slug: string) {
   const graphQLClient = new GraphQLClient(endpoint);

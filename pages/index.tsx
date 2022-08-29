@@ -1,13 +1,12 @@
 import Header from "../components/Home/Header";
 import { getLatestPosts } from "../data/getLatestPosts";
 import styles from "./Home.module.scss";
-import { actionTypes, headerPosts, contextType } from "../utilitis/types";
+import { headerPosts, contextType } from "../utilitis/types";
 import Welcome from "../components/Home/Welcome";
 import Allposts from "../components/Home/Allposts";
 import { getPostsData } from "../data/getPostsData";
-import { getCategoriesData } from "../data/getCategoriesData";
 import Head from "next/head";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import context from "../context/context";
 interface props {
   latestPosts: headerPosts[];

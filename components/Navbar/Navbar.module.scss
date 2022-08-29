@@ -8,6 +8,15 @@
   width: min(100%, 1200px);
   margin-inline: auto;
   justify-content: space-between;
+  ul {
+    font-size: $fs-large;
+    @media (max-width: 1200px) {
+      font-size: $fs-medium;
+    }
+    @media (max-width: 1000px) {
+      font-size: $fs-large;
+    }
+  }
   @media (max-width: 1000px) {
     padding: 2rem 2rem;
     position: relative;
@@ -44,6 +53,14 @@
       align-items: center;
       z-index: 1;
       animation: headerAnimation 1.5s ease-out backwards;
+      ul {
+        li {
+          &:first-child {
+            font-size: $fs-extra;
+            color: var(--primary-text-color);
+          }
+        }
+      }
     }
     ul {
       list-style: none;
@@ -184,6 +201,20 @@
     }
     &__active {
       transform: rotate(-140deg);
+    }
+  }
+  &__SignUp {
+    ul {
+      list-style: none;
+      color: var(--secondary-text-color);
+      li {
+        cursor: pointer;
+        transition: all 0.7s;
+        &:hover {
+          transform: scale(1.05);
+          color: var(--orange-color);
+        }
+      }
     }
   }
 }

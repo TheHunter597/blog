@@ -4,7 +4,6 @@ import { headerPosts } from "../../../utilitis/types";
 import { getPostData } from "../../../data/getPostData";
 import { useEffect } from "react";
 import Head from "next/head";
-
 interface category {
   slug: string;
   name: string;
@@ -29,9 +28,7 @@ interface props {
 
 function Post(props: props) {
   let { data } = props;
-  const { coverImage, title, createdAt, date, excerpt, content, author } =
-    data.post;
-
+  const { coverImage, title, date, content, author } = data.post;
   useEffect(() => {
     document.querySelector("#content")!.innerHTML = content.html;
   });
