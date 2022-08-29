@@ -15,6 +15,7 @@ import {
 } from "firebase/auth";
 import { useRouter } from "next/router";
 import { getSignedInUserData } from "../../data/getSignedInUserData";
+import Head from "next/head";
 
 function Sign() {
   const [SignUpusername, setSignUpusername] = useState<any>();
@@ -205,6 +206,9 @@ function Sign() {
   }
   return (
     <div className={`${styles.Sign}`}>
+      <Head>
+        <title>Siging</title>
+      </Head>
       <div
         className={`${styles.Sign__content} ${
           !signInUpSwitcher ? styles.Sign__content_up : ""

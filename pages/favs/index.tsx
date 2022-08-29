@@ -4,6 +4,7 @@ import { contextType } from "../../utilitis/types";
 import { useContext } from "react";
 import HomePost from "../../components/Home/HomePost/HomePost";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 function Favs() {
   const contextData = useContext(context) as contextType;
@@ -14,13 +15,20 @@ function Favs() {
   });
   return (
     <div className={styles.Favs}>
+      <Head>
+        <title>favs</title>
+      </Head>
       {state.signedIn.isSignedIn ? (
         <>
           <h2>Your Favourite List</h2>
-          <h4>
-            No posts are added you can add a post from the small star at the top
-            of every article
-          </h4>
+          {result.length < 1 ? (
+            <h4>
+              No posts are added you can add a post from the small star at the
+              top of every article
+            </h4>
+          ) : (
+            ""
+          )}
           <div className={styles.Favs__content}>{result}</div>
         </>
       ) : (
