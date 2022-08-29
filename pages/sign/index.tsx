@@ -161,17 +161,29 @@ function Sign() {
         });
         SignInErrorMessage.innerHTML = "";
 
-        dispatch({ type: actionTypes.CHANGE_SIGNED_IN, value: true });
-        const UserData = await getSignedInUserData(loginEmail);
+        // const UserData = await getSignedInUserData(loginEmail);
 
-        dispatch({
-          type: actionTypes.CHANGE_SIGNED_IN_USERNAME,
-          value: UserData.userdatabase.username,
+        onAuthStateChanged(auth, async () => {
+          const UserData = await getSignedInUserData(loginEmail);
+          dispatch({
+            type: actionTypes.CHANGE_SIGNED_IN_USERNAME,
+            value: UserData.userdatabase.username,
+          });
+          dispatch({
+            type: actionTypes.CHANGE_SIGNED_IN_EMAIL,
+            value: UserData.userdatabase.email,
+          });
+          dispatch({ type: actionTypes.CHANGE_SIGNED_IN, value: true });
         });
-        dispatch({
-          type: actionTypes.CHANGE_SIGNED_IN_EMAIL,
-          value: UserData.userdatabase.email,
-        });
+
+        // dispatch({
+        //   type: actionTypes.CHANGE_SIGNED_IN_USERNAME,
+        //   value: UserData.userdatabase.username,
+        // });
+        // dispatch({
+        //   type: actionTypes.CHANGE_SIGNED_IN_EMAIL,
+        //   value: UserData.userdatabase.email,
+        // });
         setTimeout(() => {
           router.push("/");
         }, 100);
