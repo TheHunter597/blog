@@ -52,7 +52,7 @@ function Navbar() {
           key={post.title}
         >
           <Link href={`/${post.categories[0].slug}/${post.slug}`}>
-            <a>{post.title.slice(0, 15)}...</a>
+            <a>{post.title.slice(0, 20)}...</a>
           </Link>
         </li>
       );

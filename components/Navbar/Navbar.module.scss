@@ -152,10 +152,10 @@
   &__dropdown {
     position: absolute;
     top: 60%;
-    background-color: var(--orange-color);
+    background-color: rgba(black, 0.2);
     width: 100%;
     border-radius: 0 0 10px 10px;
-    font-size: $fs-medium;
+    font-size: $fs-small;
     list-style: none;
     padding: 2rem 2rem;
     display: flex;
@@ -166,10 +166,12 @@
       top: 140%;
       width: min(90%, 800px);
       animation: phoneDropdown 2s ease-out forwards;
+      background-color: var(--orange-color);
       ul {
         display: flex;
         flex-direction: column;
         gap: 3rem;
+        font-size: $fs-small;
       }
     }
     li {
@@ -178,6 +180,7 @@
       cursor: pointer;
       transition: all 0.5s;
       list-style: none;
+      font-size: $fs-small;
       &:hover {
         color: var(--tertiary-text-color);
         transform: scale(1.1);
