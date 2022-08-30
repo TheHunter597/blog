@@ -8,6 +8,7 @@ import context from "../../../context/context";
 import { actionTypes, contextType } from "../../../utilitis/types";
 import { AiOutlineStar } from "react-icons/ai";
 import { AiFillStar } from "react-icons/ai";
+import Image from "next/image";
 interface category {
   slug: string;
   name: string;
@@ -53,7 +54,7 @@ function Post(props: props) {
       let fav = state.signedIn.favs.some((entry) => entry.slug === slug);
       setFavourited(fav);
     }
-  });
+  }, [slug, state.signedIn.favs]);
 
   useEffect(() => {
     document.querySelector("#content")!.innerHTML = content.html;
@@ -63,6 +64,11 @@ function Post(props: props) {
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1) + " ")
     .concat();
+
+  // const imageLoader = () => {
+  //   return `${author.picture != null ? `${author.picture.url}"` : ""}`;
+  // };
+  // console.log(imageLoader());
 
   return (
     <>
@@ -142,9 +148,15 @@ function Post(props: props) {
           <h3>{shownTitle}</h3>
           <div>
             {author != null ? (
-              <img
+              // <img
+              //   src={author.picture != null ? author.picture.url : ""}
+              //   alt=""
+              // />
+              <Image
                 src={author.picture != null ? author.picture.url : ""}
-                alt=""
+                alt="author picture"
+                height={50}
+                width={50}
               />
             ) : (
               ""
@@ -154,7 +166,12 @@ function Post(props: props) {
           </div>
         </div>
         <div className={styles.Post__image}>
-          <img alt="" src={coverImage.url} />
+          <Image
+            src={coverImage.url}
+            alt="cover Images"
+            height={800}
+            width={1400}
+          />
         </div>
         <div className={styles.Post__content}>
           <p id="content"></p>

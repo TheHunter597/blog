@@ -8,7 +8,7 @@ interface props {
 
 function Header(props: props) {
   let { headerPosts } = props;
-  const result = headerPosts.reverse().map((entry) => {
+  const result = headerPosts.map((entry) => {
     return (
       <div key={entry.slug}>
         <HomePost data={entry} />

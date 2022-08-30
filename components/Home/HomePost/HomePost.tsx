@@ -4,6 +4,7 @@ import styles from "./HomePost.module.scss";
 import context from "../../../context/context";
 import { actionTypes, contextType } from "../../../utilitis/types";
 import { useContext } from "react";
+import Image from "next/image";
 interface props {
   data: headerPosts;
 }
@@ -19,10 +20,12 @@ function HomePost(props: props) {
       className={styles.HomePost}
       onClick={() => router.push(`/${categories[0].slug}/${slug}`)}
     >
-      <img
+      <Image
         src={coverImage ? coverImage.url : ""}
-        className={styles.HomePost__image}
-      ></img>
+        alt="cover Images"
+        height={1000}
+        width={1400}
+      />
       <h3>{title.charAt(0).toUpperCase() + title.slice(1)}</h3>
       <div className={styles.HomePost__description}>
         <h4>{!state.phoneUser ? excerpt : ""}</h4>

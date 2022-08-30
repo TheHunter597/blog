@@ -84,10 +84,10 @@
   &__addFav {
     font-size: 5rem;
     position: absolute;
-    top: 43%;
+    top: 40%;
     right: 15%;
     @media (max-width: 600px) {
-      top: 10%;
+      top: 25%;
       right: 10%;
     }
     color: var(--orange-color);

@@ -16,7 +16,7 @@ function Navbar() {
 
   useEffect(() => {
     getCatPosts();
-  }, []);
+  }, [getCatPosts]);
 
   useEffect(() => {
     window.innerWidth < 1000
@@ -34,7 +34,7 @@ function Navbar() {
           : dispatch({ type: actionTypes.CHANGE_PHONE_USER, value: false })
       );
     };
-  }, []);
+  }, [dispatch]);
 
   const dropdownContent = state.posts
     .filter((post) => {
