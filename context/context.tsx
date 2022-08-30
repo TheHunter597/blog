@@ -120,7 +120,6 @@ export function ContextProvider(props: props) {
       });
     }
   }, [state.signedIn.isSignedIn]);
-  console.log(state);
 
   async function getCatPosts() {
     let allPosts = (await getPostsData()) || [];

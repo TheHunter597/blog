@@ -114,8 +114,9 @@
     h4 {
       font-size: $fs-medium;
       text-align: center;
+      color: var(--primary-text-color);
       span {
-        color: var(--secondary-text-color);
+        color: var(--orange-color);
         cursor: pointer;
       }
     }
