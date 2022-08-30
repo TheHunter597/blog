@@ -7,18 +7,21 @@ export async function getFavsList(email: string) {
   console.log(email);
 
   const query = gql`
-    query MyQuery {
-      userdatabase(where: { email: "${email}" }) {
-        favs {
-          slug
-          title
-          excerpt
-          coverImage {
-            url
-          }
-        }
+   query MyQuery {
+  userdatabase(where: {email: "${email}"}) {
+    favs {
+      slug
+      title
+      excerpt
+      coverImage {
+        url
+      }
+      categories {
+        slug
       }
     }
+  }
+}
   `;
   try {
     const result = await graphQLClient.request(query);
