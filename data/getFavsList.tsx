@@ -16,6 +16,9 @@ export async function getFavsList(email: string) {
           coverImage {
             url
           }
+          categories {
+            slug
+           }
         }
       }
     }
