@@ -10,7 +10,8 @@ function Favs() {
   const contextData = useContext(context) as contextType;
   const { state } = contextData;
   const router = useRouter();
-  const result = state.signedIn.favs.map((entry) => {
+
+  const result = state.signedIn.favs.reverse().map((entry) => {
     return <HomePost data={entry} key={entry.coverImage.url} />;
   });
   return (

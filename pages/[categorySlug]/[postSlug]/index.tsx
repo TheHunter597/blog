@@ -79,7 +79,10 @@ function Post(props: props) {
               });
 
               if (!duplicate) {
-                let newList = [...state.signedIn.favs, { title, slug }];
+                let newList = [
+                  ...state.signedIn.favs,
+                  { title, slug, categories, coverImage },
+                ];
                 dispatch({
                   type: actionTypes.ADD_FAVS_LIST,
                   value: { title, slug, excerpt, categories, coverImage },

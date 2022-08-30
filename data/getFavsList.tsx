@@ -18,7 +18,6 @@ export async function getFavsList(email: string) {
           }
           categories {
             slug
-           }
         }
       }
     }
