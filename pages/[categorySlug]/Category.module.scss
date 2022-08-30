@@ -1,6 +1,6 @@
 .Category {
   max-width: min(90%, 1100px);
-  margin-top: 15rem;
+  padding-top: 15rem;
   margin-inline: auto;
   display: grid;
   grid-template-columns: 50% 50%;
@@ -12,7 +12,6 @@
     margin-inline: auto;
   }
   div {
-    position: static;
     h3 {
       text-align: center;
     }
