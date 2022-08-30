@@ -1,18 +1,12 @@
 @import "../../../styles/index.module.scss";
 
 .Post {
-  display: grid;
   width: min(90%, 1250px);
   margin-inline: auto;
-  grid-template-rows: 100px 200px 650px auto;
-  grid-template-areas:
-    " . "
-    " info "
-    " image "
-    " content ";
   @media (max-width: 800px) {
-    display: grid;
-    grid-template-rows: 50px 300px 400px 1fr;
+    overflow: hidden;
+    width: 100%;
+    margin-inline: unset;
   }
   &__info {
     grid-area: info;
@@ -27,6 +21,13 @@
       justify-content: center;
       align-items: center;
       gap: 2rem;
+      @media (max-width: 600px) {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+      }
       img {
         width: 5rem;
         height: 5rem;
@@ -48,7 +49,7 @@
     padding-top: 7rem;
     width: 90%;
     @media (max-width: 400px) {
-      width: 100%;
+      width: 90%;
     }
     height: 100%;
     margin-inline: auto;
@@ -61,12 +62,13 @@
   &__content {
     grid-area: content;
     margin-inline: auto;
-    width: min(95%, 1100px);
+    width: min(97%, 1100px);
     p {
       padding-top: 2rem;
       font-size: $fs-large;
       @media (max-width: 400px) {
         font-size: $fs-medium;
+        width: 100%;
       }
       word-spacing: 4px;
       font-weight: 300;
