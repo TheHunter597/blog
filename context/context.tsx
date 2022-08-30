@@ -113,15 +113,11 @@ export function ContextProvider(props: props) {
       });
       dispatch({
         type: actionTypes.SET_USER_FAVS_LIST,
-        value: localStorage.getItem("favs"),
+        value:
+          JSON.parse(localStorage.getItem("favs") as string) === null
+            ? []
+            : JSON.parse(localStorage.getItem("favs") as string),
       });
-      // dispatch({
-      //   type: actionTypes.SET_USER_FAVS_LIST,
-      //   value:
-      //     localStorage.getItem("favs") === null
-      //       ? []
-      //       : localStorage.getItem("favs"),
-      // });
     }
   }, [state.signedIn.isSignedIn]);
   console.log(state);

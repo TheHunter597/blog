@@ -18,14 +18,26 @@
   @media (max-width: 900px) {
     width: min(95%, 780px);
     margin-inline: auto;
+    display: grid;
     grid-template-columns: 0.5fr 0.5fr;
     grid-template-rows: 0.5fr 0.5fr;
     grid-template-areas:
       "main main"
       "second third";
     h3 {
-      font-size: $fs-medium;
+      font-size: $fs-small;
     }
     gap: 10px 20px;
+  }
+  @media (max-width: 600px) {
+    display: grid;
+
+    grid-template-rows: 0.5fr 0.5fr;
+    grid-template-areas:
+      "main main"
+      "second third";
+    h3 {
+      font-size: $fs-small;
+    }
   }
 }

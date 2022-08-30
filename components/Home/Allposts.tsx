@@ -10,7 +10,7 @@ interface props {
 
 function Allposts(props: props) {
   let { allPosts } = props;
-  let result = allPosts.posts.map((entry) => {
+  let result = allPosts.posts.reverse().map((entry) => {
     return <HomePost data={entry} key={entry.title} />;
   });
   return <div className={styles.Allposts}>{result}</div>;
