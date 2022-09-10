@@ -5,13 +5,13 @@ import { useContext } from "react";
 import HomePost from "../../components/Home/HomePost/HomePost";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import { useSelector } from "react-redux";
+import { signedInData } from "../../redux/signedIn";
 
 function Favs() {
-  const contextData = useContext(context) as contextType;
-  const { state } = contextData;
   const router = useRouter();
-
-  const result = state.signedIn.favs.map((entry) => {
+  const signedInState = useSelector(signedInData);
+  const result = signedInState.favs.map((entry) => {
     return <HomePost data={entry} key={entry.coverImage.url} />;
   });
   return (
@@ -19,7 +19,7 @@ function Favs() {
       <Head>
         <title>favs</title>
       </Head>
-      {state.signedIn.isSignedIn ? (
+      {signedInState.isSignedIn ? (
         <>
           <h2>Your Favourite List</h2>
           {result.length < 1 ? (

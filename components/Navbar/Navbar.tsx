@@ -1,42 +1,81 @@
 import styles from "./Navbar.module.scss";
 import Link from "next/link";
-import { useContext, useEffect, useRef, useState } from "react";
-import context from "../../context/context";
-import { actionTypes, contextType } from "../../utilitis/types";
+import { useEffect, useRef, useState } from "react";
 import { FcSearch } from "react-icons/fc";
 import { FaBars } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux";
+import { RootDispatch, RootState } from "../../redux";
+import {
+  generalInfoData,
+  fetchAllPosts,
+  fetchAllCategories,
+  changePhoneUser,
+} from "../../redux/generalInfo";
+import { useRouter } from "next/router";
+import { signedInData } from "../../redux/signedIn";
+import {
+  changeSignedInUsername,
+  changeSignedInEmail,
+  changeIsSignedIn,
+  changeSignedInFavs,
+} from "../../redux/signedIn";
 function Navbar() {
-  const contextData = useContext(context) as contextType;
-  const { state, dispatch, getCatPosts, signOut } = contextData;
   const input = useRef<HTMLInputElement>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSearch, setActiveSearch] = useState(false);
   const [showHeaders, setShowHeaders] = useState(false);
   const [openUserMenu, setOpenUserMenu] = useState(false);
+  const reduxDispatch: RootDispatch = useDispatch();
+  const generalInfo = useSelector(generalInfoData);
+  const signedInState = useSelector(signedInData);
+  const router = useRouter();
+  useEffect(() => {
+    if (localStorage.getItem("SignedIn") == "true") {
+      reduxDispatch(changeIsSignedIn(true));
+      reduxDispatch(changeSignedInUsername(localStorage.getItem("Username")));
+      reduxDispatch(changeSignedInEmail(localStorage.getItem("Email")));
+      reduxDispatch(
+        changeSignedInFavs(
+          JSON.parse(localStorage.getItem("favs") as string) === null
+            ? []
+            : JSON.parse(localStorage.getItem("favs") as string)
+        )
+      );
+    }
+  }, [signedInState.isSignedIn, reduxDispatch]);
+  function signOut() {
+    localStorage.removeItem("SignedIn");
+    localStorage.removeItem("Username");
+    localStorage.removeItem("Email");
+    localStorage.removeItem("favs");
+
+    setTimeout(() => {
+      location.reload();
+      router.push("/");
+    }, 500);
+  }
 
   useEffect(() => {
-    getCatPosts();
-  }, [getCatPosts]);
-
-  useEffect(() => {
+    reduxDispatch(fetchAllPosts());
+    reduxDispatch(fetchAllCategories());
     window.innerWidth < 1000
-      ? dispatch({ type: actionTypes.CHANGE_PHONE_USER, value: true })
-      : dispatch({ type: actionTypes.CHANGE_PHONE_USER, value: false });
+      ? reduxDispatch(changePhoneUser(true))
+      : reduxDispatch(changePhoneUser(false));
     window.addEventListener("resize", () =>
       window.innerWidth < 1000
-        ? dispatch({ type: actionTypes.CHANGE_PHONE_USER, value: true })
-        : dispatch({ type: actionTypes.CHANGE_PHONE_USER, value: false })
+        ? reduxDispatch(changePhoneUser(true))
+        : reduxDispatch(changePhoneUser(false))
     );
     return () => {
       window.removeEventListener("resize", () =>
         window.innerWidth < 1000
-          ? dispatch({ type: actionTypes.CHANGE_PHONE_USER, value: true })
-          : dispatch({ type: actionTypes.CHANGE_PHONE_USER, value: false })
+          ? reduxDispatch(changePhoneUser(true))
+          : reduxDispatch(changePhoneUser(false))
       );
     };
-  }, [dispatch]);
+  }, [reduxDispatch]);
 
-  const dropdownContent = state.posts
+  const dropdownContent = generalInfo.posts
     .filter((post) => {
       return searchTerm.length >= 2
         ? post.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -67,7 +106,7 @@ function Navbar() {
       </div>
       <div className={styles.Navbar__headers}>
         <ul>
-          {state.categories.categories.map((category) => (
+          {generalInfo.categories.categories.map((category) => (
             <li key={category.name}>
               <Link href={`/${category.slug}`}>{category.name}</Link>
             </li>
@@ -105,14 +144,14 @@ function Navbar() {
       <div
         className={styles.Navbar__SignUp}
         onMouseEnter={() =>
-          state.signedIn.isSignedIn ? setOpenUserMenu(true) : ""
+          signedInState.isSignedIn ? setOpenUserMenu(true) : ""
         }
         onMouseLeave={() =>
-          state.signedIn.isSignedIn ? setOpenUserMenu(false) : ""
+          signedInState.isSignedIn ? setOpenUserMenu(false) : ""
         }
       >
         <ul>
-          {!state.signedIn.isSignedIn ? (
+          {!signedInState.isSignedIn ? (
             <li>
               <Link href="/sign">Sign Up</Link>
             </li>
@@ -120,7 +159,7 @@ function Navbar() {
             <>
               <li>
                 <Link href="/">
-                  <a>{state.signedIn.username}</a>
+                  <a>{signedInState.username}</a>
                 </Link>
                 {openUserMenu ? (
                   <ul className={styles.Navbar__userDropdown}>
@@ -187,7 +226,7 @@ function Navbar() {
       )}
       <div
         className={`${styles.Navbar__bars} ${
-          state.phoneUser ? styles.Navbar__bars__appear : ""
+          generalInfo.phoneUser ? styles.Navbar__bars__appear : ""
         } ${showHeaders ? styles.Navbar__bars__active : ""}`}
         onClick={() => {
           setShowHeaders((prev) => !prev);
@@ -200,18 +239,18 @@ function Navbar() {
         <div className={styles.Navbar__headers}>
           <ul>
             <li onClick={() => setShowHeaders(false)}>
-              {!state.signedIn.isSignedIn ? (
+              {!signedInState.isSignedIn ? (
                 <Link href="/sign">Sign Up</Link>
               ) : (
-                <span>{state.signedIn.username}</span>
+                <span>{signedInState.username}</span>
               )}
             </li>
-            {state.categories.categories.map((category) => (
+            {generalInfo.categories.categories.map((category) => (
               <li key={category.slug} onClick={() => setShowHeaders(false)}>
                 <Link href={`/${category.slug}`}>{category.name}</Link>
               </li>
             ))}
-            {state.signedIn.isSignedIn ? (
+            {signedInState.isSignedIn ? (
               <>
                 <li onClick={() => setShowHeaders(false)}>
                   <Link href="/favs">Favs list</Link>{" "}
@@ -237,7 +276,7 @@ function Navbar() {
     </div>
   );
 
-  return !state.phoneUser ? wideScreenNav : smallerScreenNav;
+  return !generalInfo.phoneUser ? wideScreenNav : smallerScreenNav;
 }
 
 export default Navbar;

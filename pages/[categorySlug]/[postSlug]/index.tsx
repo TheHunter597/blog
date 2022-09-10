@@ -2,13 +2,13 @@ import styles from "./post.module.scss";
 import { getCategoriesData } from "../../../data/getCategoriesData";
 import { headerPosts } from "../../../utilitis/types";
 import { getPostData } from "../../../data/getPostData";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
-import context from "../../../context/context";
-import { actionTypes, contextType } from "../../../utilitis/types";
 import { AiOutlineStar } from "react-icons/ai";
 import { AiFillStar } from "react-icons/ai";
 import Image from "next/image";
+import { useDispatch, useSelector } from "react-redux";
+import { changeSignedInFavs, signedInData } from "../../../redux/signedIn";
 interface category {
   slug: string;
   name: string;
@@ -34,8 +34,7 @@ interface props {
 }
 
 function Post(props: props) {
-  const contextData = useContext(context);
-  const { state, dispatch } = contextData as contextType;
+  const signedInState = useSelector(signedInData);
   let { data } = props;
   const {
     coverImage,
@@ -50,25 +49,21 @@ function Post(props: props) {
   const [favourited, setFavourited] = useState(false);
 
   useEffect(() => {
-    if (state.signedIn.favs != null) {
-      let fav = state.signedIn.favs.some((entry) => entry.slug === slug);
+    if (signedInState.favs != null) {
+      let fav = signedInState.favs.some((entry) => entry.slug === slug);
       setFavourited(fav);
     }
-  }, [slug, state.signedIn.favs]);
+  }, [slug, signedInState.favs]);
 
   useEffect(() => {
     document.querySelector("#content")!.innerHTML = content.html;
   });
+  const dispatch = useDispatch();
 
   const shownTitle = title
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1) + " ")
     .concat();
-
-  // const imageLoader = () => {
-  //   return `${author.picture != null ? `${author.picture.url}"` : ""}`;
-  // };
-  // console.log(imageLoader());
 
   return (
     <>
@@ -76,28 +71,25 @@ function Post(props: props) {
         <title>{data.post.title}</title>
       </Head>
       <div className={`${styles.Post} ${styles.container}`}>
-        {state.signedIn.isSignedIn ? (
+        {signedInState.isSignedIn ? (
           <div
             className={styles.Post__addFav}
             onClick={() => {
-              let duplicate = state.signedIn.favs.some((entry) => {
+              let duplicate = signedInState.favs.some((entry) => {
                 return entry.slug === slug;
               });
 
               if (!duplicate) {
                 let newList = [
-                  ...state.signedIn.favs,
-                  { title, slug, categories, coverImage },
+                  ...signedInState.favs,
+                  { title, slug, categories, coverImage, excerpt },
                 ];
-                dispatch({
-                  type: actionTypes.ADD_FAVS_LIST,
-                  value: { title, slug, excerpt, categories, coverImage },
-                });
+                dispatch(changeSignedInFavs(newList));
                 localStorage.setItem("favs", JSON.stringify(newList));
                 const result = fetch("/api/addToFavList", {
                   method: "POST",
                   body: JSON.stringify({
-                    email: state.signedIn.email,
+                    email: signedInState.email,
                     slug: slug,
                   }),
                   headers: {
@@ -107,19 +99,16 @@ function Post(props: props) {
                   return res;
                 });
               } else {
-                const newList = state.signedIn.favs.filter((entry) => {
+                const newList = signedInState.favs.filter((entry) => {
                   return entry.slug != slug;
                 });
-                dispatch({
-                  type: actionTypes.REMOVE_FAVS_LIST,
-                  value: newList,
-                });
+                dispatch(changeSignedInFavs(newList));
                 localStorage.setItem("favs", JSON.stringify(newList));
 
                 const result = fetch("/api/removeFromFavList", {
                   method: "POST",
                   body: JSON.stringify({
-                    email: state.signedIn.email,
+                    email: signedInState.email,
                     slug: slug,
                   }),
                   headers: {
@@ -148,10 +137,6 @@ function Post(props: props) {
           <h3>{shownTitle}</h3>
           <div>
             {author != null ? (
-              // <img
-              //   src={author.picture != null ? author.picture.url : ""}
-              //   alt=""
-              // />
               <Image
                 src={author.picture != null ? author.picture.url : ""}
                 alt="author picture"

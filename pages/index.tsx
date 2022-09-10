@@ -1,13 +1,21 @@
 import Header from "../components/Home/Header";
 import { getLatestPosts } from "../data/getLatestPosts";
 import styles from "./Home.module.scss";
-import { headerPosts, contextType } from "../utilitis/types";
+import { headerPosts } from "../utilitis/types";
 import Welcome from "../components/Home/Welcome";
 import Allposts from "../components/Home/Allposts";
 import { getPostsData } from "../data/getPostsData";
 import Head from "next/head";
-import { useContext } from "react";
-import context from "../context/context";
+import { useEffect } from "react";
+import {
+  changeSignedInUsername,
+  changeSignedInEmail,
+  changeIsSignedIn,
+  changeSignedInFavs,
+} from "../redux/signedIn";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux";
+
 interface props {
   latestPosts: headerPosts[];
   allPosts: {
@@ -18,8 +26,22 @@ interface props {
 
 function Home(props: props) {
   let { latestPosts, allPosts } = props;
-
-  const contextData = useContext(context) as contextType;
+  const dispatch = useDispatch();
+  const signedIn = useSelector((state: RootState) => state.signedIn.isSignedIn);
+  useEffect(() => {
+    if (localStorage.getItem("SignedIn") == "true") {
+      dispatch(changeIsSignedIn(true));
+      dispatch(changeSignedInUsername(localStorage.getItem("Username")));
+      dispatch(changeSignedInEmail(localStorage.getItem("Email")));
+      dispatch(
+        changeSignedInFavs(
+          JSON.parse(localStorage.getItem("favs") as string) === null
+            ? []
+            : JSON.parse(localStorage.getItem("favs") as string)
+        )
+      );
+    }
+  }, [signedIn, dispatch]);
   return (
     <>
       <Head>

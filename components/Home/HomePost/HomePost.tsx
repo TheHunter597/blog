@@ -1,10 +1,9 @@
 import { useRouter } from "next/router";
 import { headerPosts } from "../../../utilitis/types";
 import styles from "./HomePost.module.scss";
-import context from "../../../context/context";
-import { actionTypes, contextType } from "../../../utilitis/types";
-import { useContext } from "react";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux";
 interface props {
   data: headerPosts;
 }
@@ -12,8 +11,9 @@ interface props {
 function HomePost(props: props) {
   const router = useRouter();
   const { data } = props;
-  const contextData = useContext(context) as contextType;
-  const { state } = contextData;
+  const phoneUser = useSelector(
+    (state: RootState) => state.generalInfo.phoneUser
+  );
   const { title, coverImage, excerpt, slug, categories } = data;
   return (
     <div
@@ -28,7 +28,7 @@ function HomePost(props: props) {
       />
       <h3>{title.charAt(0).toUpperCase() + title.slice(1)}</h3>
       <div className={styles.HomePost__description}>
-        <h4>{!state.phoneUser ? excerpt : ""}</h4>
+        <h4>{!phoneUser ? excerpt : ""}</h4>
       </div>
     </div>
   );

@@ -1,7 +1,5 @@
-import { useContext, useEffect, useState } from "react";
-import context from "../../context/context";
+import { useState } from "react";
 import styles from "./Sign.module.scss";
-import { actionTypes, contextType } from "../../utilitis/types";
 import { auth } from "../../utilitis/firebase-config";
 import * as EmailValidator from "email-validator";
 import SignUp from "../../components/sign/SignUp";
@@ -11,86 +9,83 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   signInWithEmailAndPassword,
-  onAuthStateChanged,
 } from "firebase/auth";
 import { useRouter } from "next/router";
 import { getSignedInUserData } from "../../data/getSignedInUserData";
 import Head from "next/head";
+import { useSelector, useDispatch } from "react-redux";
+import { RootDispatch, RootState } from "../../redux";
+import {
+  changeSignInPasswordError,
+  changeSignInEmailError,
+  changeSignInErrorError,
+} from "../../redux/signIn";
+import {
+  changeSignUpUsernameError,
+  changeSignUpPasswordError,
+  changeSignUpEmailError,
+  changeSignUpErrorMessage,
+  signUpData,
+  changeSignUpUsername,
+  changeSignUpPassword,
+  changeSignUpEmail,
+} from "../../redux/signUp";
+import {
+  changeSignedInUsername,
+  changeSignedInEmail,
+  changeIsSignedIn,
+  changeSignedInFavs,
+} from "../../redux/signedIn";
 
 function Sign() {
-  const [SignUpusername, setSignUpusername] = useState<any>();
-  const [SignUppassword, setSignUppassword] = useState<any>();
-  const [email, setEmail] = useState<any>();
   const [signInUpSwitcher, setSignInUpSwitcher] = useState(false);
-  const data = useContext(context);
-  const { state, dispatch } = data as contextType;
-  const { SignInErrorMessage } = state.signIn;
-  const { SignUpErrorMessage } = state.signUp;
-  const { phoneUser } = state;
+  const dispatch: RootDispatch = useDispatch();
+  const phoneUser = useSelector(
+    (state: RootState) => state.generalInfo.phoneUser
+  );
+  const signUpState = useSelector(signUpData);
+  const isSignedIn = useSelector(
+    (state: RootState) => state.signedIn.isSignedIn
+  );
   const router = useRouter();
   function restErrors() {
-    dispatch({
-      type: actionTypes.CHANGE_SIGN_UP_EMAIL_ERROR,
-      value: false,
-    });
-    dispatch({
-      type: actionTypes.CHANGE_SIGN_UP_USERNAME_ERROR,
-      value: false,
-    });
-    dispatch({
-      type: actionTypes.CHANGE_SIGN_UP_PASSWORD_ERROR,
-      value: false,
-    });
+    dispatch(changeSignUpUsernameError(false));
+    dispatch(changeSignUpPasswordError(false));
+    dispatch(changeSignUpEmailError(false));
   }
   async function addUser() {
     const data = {
-      username: SignUpusername.value,
-      password: SignUppassword.value,
-      email: email.current.value,
+      username: signUpState.SignUpUsername,
+      password: signUpState.SignUpPassword,
+      email: signUpState.SignUpEmail,
     };
     if (
       !data.username ||
       data.username.length < 8 ||
       data.username.length > 25
     ) {
-      dispatch({
-        type: actionTypes.CHANGE_SIGN_UP_USERNAME_ERROR,
-        value: true,
-      });
-      SignUpErrorMessage.innerHTML =
-        "Username should be between 8 and 25 letters";
+      dispatch(changeSignUpUsernameError(true));
+      dispatch(
+        changeSignUpErrorMessage("Username should be between 8 and 25 letters")
+      );
       return;
     } else if (
       !data.password ||
       data.password.length < 8 ||
       data.password.length > 40
     ) {
-      dispatch({
-        type: actionTypes.CHANGE_SIGN_UP_PASSWORD_ERROR,
-        value: true,
-      });
-      dispatch({
-        type: actionTypes.CHANGE_SIGN_UP_USERNAME_ERROR,
-        value: false,
-      });
-      SignUpErrorMessage.innerHTML =
-        "Password should be between 8 and 40 letters";
+      dispatch(changeSignUpUsernameError(false));
+      dispatch(changeSignUpPasswordError(true));
+      dispatch(
+        changeSignUpErrorMessage("Password should be between 8 and 40 letters")
+      );
 
       return;
     } else if (!data.email || EmailValidator.validate(data.email) != true) {
-      dispatch({
-        type: actionTypes.CHANGE_SIGN_UP_EMAIL_ERROR,
-        value: true,
-      });
-      dispatch({
-        type: actionTypes.CHANGE_SIGN_UP_USERNAME_ERROR,
-        value: false,
-      });
-      dispatch({
-        type: actionTypes.CHANGE_SIGN_UP_PASSWORD_ERROR,
-        value: false,
-      });
-      SignUpErrorMessage.innerHTML = "Invalid Email";
+      dispatch(changeSignUpUsernameError(false));
+      dispatch(changeSignUpPasswordError(false));
+      dispatch(changeSignUpEmailError(true));
+      dispatch(changeSignUpErrorMessage("Invalid Email"));
       return;
     } else {
       restErrors();
@@ -103,11 +98,8 @@ function Sign() {
       });
 
       if (!result.ok) {
-        SignUpErrorMessage.innerHTML = "Email has been used before ";
-        dispatch({
-          type: actionTypes.CHANGE_SIGN_UP_EMAIL_ERROR,
-          value: true,
-        });
+        dispatch(changeSignUpEmailError(true));
+        dispatch(changeSignUpErrorMessage("Email has been used before"));
       } else if (result.ok) {
         try {
           const newUser = await createUserWithEmailAndPassword(
@@ -120,14 +112,16 @@ function Sign() {
         }
 
         await sendEmailVerification(auth.currentUser!);
-        SignUpErrorMessage.innerHTML =
-          "You have Signed up sucessfully please check your email for vertification link";
+        dispatch(
+          changeSignUpErrorMessage(
+            "You have Signed up sucessfully please check your email for vertification link"
+          )
+        );
+
         setTimeout(() => {
-          if (SignUpusername && SignUppassword && email.current) {
-            SignUpusername.value = "";
-            SignUppassword.value = "";
-            email.current.value = "";
-          }
+          dispatch(changeSignUpUsername(""));
+          dispatch(changeSignUpPassword(""));
+          dispatch(changeSignUpEmail(""));
         }, 500);
       }
 
@@ -142,48 +136,23 @@ function Sign() {
         loginpassword
       );
       if (!user.user.emailVerified) {
-        dispatch({
-          type: actionTypes.CHANGE_SIGN_IN_EMAIL_ERROR,
-          value: false,
-        });
-        dispatch({
-          type: actionTypes.CHANGE_SIGN_IN_PASSWORD_ERROR,
-          value: false,
-        });
-        SignInErrorMessage.innerHTML = "Please verify your email and try again";
+        dispatch(changeSignInEmailError(false));
+        dispatch(changeSignInPasswordError(false));
+        dispatch(
+          changeSignInErrorError("Please verify your email and try again")
+        );
       } else {
-        dispatch({
-          type: actionTypes.CHANGE_SIGN_IN_EMAIL_ERROR,
-          value: false,
-        });
-        dispatch({
-          type: actionTypes.CHANGE_SIGN_IN_PASSWORD_ERROR,
-          value: false,
-        });
-        SignInErrorMessage.innerHTML = "";
+        dispatch(changeSignInEmailError(false));
+        dispatch(changeSignInPasswordError(false));
+        dispatch(changeSignInErrorError(""));
 
         const UserData = await getSignedInUserData(loginEmail);
-        dispatch({ type: actionTypes.CHANGE_SIGNED_IN, value: true });
-
-        dispatch({
-          type: actionTypes.CHANGE_SIGNED_IN_USERNAME,
-          value: UserData.userdatabase.username,
-        });
-        dispatch({
-          type: actionTypes.CHANGE_SIGNED_IN_EMAIL,
-          value: UserData.userdatabase.email,
-        });
         let favData = (await getFavsList(loginEmail)) || [];
-        if (favData != []) {
-          dispatch({
-            type: actionTypes.SET_USER_FAVS_LIST,
-            value: favData.userdatabase.favs,
-          });
-          localStorage.setItem(
-            "favs",
-            JSON.stringify(favData.userdatabase.favs)
-          );
-        }
+        dispatch(changeIsSignedIn(true));
+        dispatch(changeSignedInUsername(UserData.userdatabase.username));
+        dispatch(changeSignedInEmail(UserData.userdatabase.email));
+        dispatch(changeSignedInFavs(favData.userdatabase.favs));
+        localStorage.setItem("favs", JSON.stringify(favData.userdatabase.favs));
         localStorage.setItem("SignedIn", "true");
         localStorage.setItem("Username", UserData.userdatabase.username);
         localStorage.setItem("Email", UserData.userdatabase.email);
@@ -192,16 +161,13 @@ function Sign() {
         }, 100);
       }
     } catch (e) {
-      dispatch({
-        type: actionTypes.CHANGE_SIGN_IN_EMAIL_ERROR,
-        value: true,
-      });
-      dispatch({
-        type: actionTypes.CHANGE_SIGN_IN_PASSWORD_ERROR,
-        value: true,
-      });
-      SignInErrorMessage.innerHTML =
-        "Username or Password is incorret please try again";
+      dispatch(changeSignInEmailError(true));
+      dispatch(changeSignInPasswordError(true));
+      dispatch(
+        changeSignInErrorError(
+          "Username or Password is incorret please try again"
+        )
+      );
     }
   }
   return (
@@ -209,31 +175,34 @@ function Sign() {
       <Head>
         <title>Siging</title>
       </Head>
-      <div
-        className={`${styles.Sign__content} ${
-          !signInUpSwitcher ? styles.Sign__content_up : ""
-        }`}
-      >
-        {!phoneUser || (phoneUser && !signInUpSwitcher) ? (
-          <SignUp
-            addUser={addUser}
-            setEmail={setEmail}
-            setSignUpusername={setSignUpusername}
-            setSignUppassword={setSignUppassword}
-            setSignInUpSwitcher={setSignInUpSwitcher}
-          />
-        ) : (
-          ""
-        )}
-        {!phoneUser || (phoneUser && signInUpSwitcher) ? (
-          <SignIn
-            userSignIn={userSignIn}
-            setSignInUpSwitcher={setSignInUpSwitcher}
-          />
-        ) : (
-          ""
-        )}
-      </div>
+      {!isSignedIn ? (
+        <div
+          className={`${styles.Sign__content} ${
+            !signInUpSwitcher ? styles.Sign__content_up : ""
+          }`}
+        >
+          {!phoneUser || (phoneUser && !signInUpSwitcher) ? (
+            <SignUp
+              addUser={addUser}
+              setSignInUpSwitcher={setSignInUpSwitcher}
+            />
+          ) : (
+            ""
+          )}
+          {!phoneUser || (phoneUser && signInUpSwitcher) ? (
+            <SignIn
+              userSignIn={userSignIn}
+              setSignInUpSwitcher={setSignInUpSwitcher}
+            />
+          ) : (
+            ""
+          )}
+        </div>
+      ) : (
+        <div className={styles["Sign__alreadySigned"]}>
+          You are already signed In
+        </div>
+      )}
     </div>
   );
 }

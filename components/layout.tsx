@@ -1,19 +1,19 @@
 import Navbar from "./Navbar/Navbar";
 import styles from "../styles/index.module.scss";
-
-import { ContextProvider } from "../context/context";
+import { Provider } from "react-redux";
+import store from "../redux";
 interface props {
   children: JSX.Element;
 }
 
 function Layout(props: props) {
   return (
-    <ContextProvider>
+    <Provider store={store}>
       <div className={styles.root}>
         <Navbar />
         <div className={styles.container}>{props.children}</div>
       </div>
-    </ContextProvider>
+    </Provider>
   );
 }
 

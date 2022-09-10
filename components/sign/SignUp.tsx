@@ -1,49 +1,31 @@
-import { useRef, useContext, useEffect } from "react";
-import context from "../../context/context";
-import { actionTypes, contextType } from "../../utilitis/types";
+import { useRef } from "react";
 import styles from "../../pages/sign/Sign.module.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { signUpData } from "../../redux/signUp";
+import {
+  changeSignUpUsername,
+  changeSignUpPassword,
+  changeSignUpEmail,
+} from "../../redux/signUp";
 interface props {
   addUser: () => void;
-  setSignUpusername: Function;
-  setSignUppassword: Function;
-  setEmail: Function;
   setSignInUpSwitcher: Function;
 }
 
 function SignUp(props: props) {
-  const {
-    addUser,
-    setSignUpusername,
-    setSignUppassword,
-    setEmail,
-    setSignInUpSwitcher,
-  } = props;
-  const data = useContext(context);
-  const { state, dispatch } = data as contextType;
-  const { SignUpUsernameError, SignUpPasswordError, emailError } = state.signUp;
+  const { addUser, setSignInUpSwitcher } = props;
   let SignUpusername = useRef<HTMLInputElement>(null);
   const SignUppassword = useRef<HTMLInputElement>(null);
   const SignUpemail = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    dispatch({
-      type: actionTypes.CHANGE_SIGN_UP_ERROR_MESSAGE,
-      value: document.querySelector("#signUpError") as HTMLElement,
-    });
-  }, []);
-  useEffect(() => {
-    setSignUpusername(SignUpusername.current);
-    setSignUppassword(SignUppassword.current);
-    setEmail(SignUpemail);
-  }, [
-    SignUpusername.current?.value,
-    SignUppassword.current?.value,
-    SignUpemail.current?.value,
-  ]);
+  const signUpState = useSelector(signUpData);
+  const dispatch = useDispatch();
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        addUser();
+        setTimeout(() => {
+          addUser();
+        }, 100);
       }}
     >
       <div>
@@ -53,7 +35,11 @@ function SignUp(props: props) {
             type="text"
             ref={SignUpusername}
             placeholder="Username"
-            className={SignUpUsernameError ? styles.error : ""}
+            className={signUpState.SignUpUsernameError ? styles.error : ""}
+            onChange={() =>
+              dispatch(changeSignUpUsername(SignUpusername.current?.value))
+            }
+            value={signUpState.SignUpUsername}
           />
         </div>
         <div>
@@ -61,7 +47,11 @@ function SignUp(props: props) {
             type="password"
             ref={SignUppassword}
             placeholder="Password"
-            className={SignUpPasswordError ? styles.error : ""}
+            className={signUpState.SignUpPasswordError ? styles.error : ""}
+            onChange={() =>
+              dispatch(changeSignUpPassword(SignUppassword.current?.value))
+            }
+            value={signUpState.SignUpPassword}
           />
         </div>
         <div>
@@ -69,7 +59,11 @@ function SignUp(props: props) {
             type="text"
             ref={SignUpemail}
             placeholder="E-mail"
-            className={emailError ? styles.error : ""}
+            className={signUpState.SignUpEmailError ? styles.error : ""}
+            value={signUpState.SignUpEmail}
+            onChange={() =>
+              dispatch(changeSignUpEmail(SignUpemail.current?.value))
+            }
           />
         </div>
         <div className={styles.Sign__confirm}>
@@ -77,7 +71,9 @@ function SignUp(props: props) {
             Already have an account{" "}
             <span onClick={() => setSignInUpSwitcher(true)}>sign in</span>
           </h4>
-          <small id="signUpError" className={styles.Sign__error}></small>
+          <small className={styles.Sign__error}>
+            {signUpState.SignUpErrorMessage}
+          </small>
           <button>Confirm</button>
         </div>
       </div>

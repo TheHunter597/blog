@@ -1,7 +1,7 @@
 import styles from "../../pages/sign/Sign.module.scss";
-import { useRef, useContext, useEffect } from "react";
-import context from "../../context/context";
-import { actionTypes, contextType } from "../../utilitis/types";
+import { useRef } from "react";
+import { useSelector } from "react-redux";
+import { signInData } from "../../redux/signIn";
 
 interface props {
   userSignIn: Function;
@@ -10,19 +10,9 @@ interface props {
 
 function SignIn(props: props) {
   const { userSignIn, setSignInUpSwitcher } = props;
-  const data = useContext(context);
-  const { state, dispatch } = data as contextType;
-  const {
-    signIn: { SignInPasswordError, SignInEmailError },
-  } = state;
   const loginEmail = useRef<HTMLInputElement>(null);
   const loginPassword = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    dispatch({
-      type: actionTypes.CHANGE_SIGN_IN_ERROR_MESSAGE,
-      value: document.querySelector("#signInError") as HTMLElement,
-    });
-  }, []);
+  const signInState = useSelector(signInData);
   return (
     <form onSubmit={(e) => e.preventDefault()}>
       <div className={styles.Sign__Signin}>
@@ -33,7 +23,7 @@ function SignIn(props: props) {
               type="email"
               placeholder="E-mail"
               ref={loginEmail}
-              className={SignInEmailError ? styles.error : ""}
+              className={signInState.SignInEmailError ? styles.error : ""}
             />
           </div>
           <div>
@@ -41,7 +31,7 @@ function SignIn(props: props) {
               type="password"
               placeholder="Password"
               ref={loginPassword}
-              className={SignInPasswordError ? styles.error : ""}
+              className={signInState.SignInPasswordError ? styles.error : ""}
             />
           </div>
         </div>
@@ -50,7 +40,9 @@ function SignIn(props: props) {
             Dont have an account, Create one now{" "}
             <span onClick={() => setSignInUpSwitcher(false)}>sign up</span>
           </h4>
-          <small className={styles.Sign__error} id="signInError"></small>
+          <small className={styles.Sign__error}>
+            {signInState.SignInErrorMessage}
+          </small>
           <button
             onClick={() =>
               userSignIn(
