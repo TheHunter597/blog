@@ -1,9 +1,10 @@
 import { useRouter } from "next/router";
-import { headerPosts } from "../../../utilitis/types";
 import styles from "./HomePost.module.scss";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux";
+import { headerPosts } from "../../../redux/generalInfo";
+
 interface props {
   data: headerPosts;
 }
