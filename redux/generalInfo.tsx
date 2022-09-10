@@ -3,11 +3,20 @@ import { RootState } from ".";
 import { getCategoriesData } from "../data/getCategoriesData";
 import { getPostsData } from "../data/getPostsData";
 
+export interface headerPosts {
+  title: string;
+  coverImage?: { url: string };
+  excerpt: string;
+  slug: string;
+  categories: [{ slug: string }];
+}
+
 interface postsDataType {
   title: string;
   slug: string;
   excerpt: string;
   categories: { slug: string }[];
+  coverImage?: { url: string };
 }
 interface categoriesDataType {
   categories: { name: string; slug: string; posts: { excerpt: string }[] }[];

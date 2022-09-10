@@ -1,35 +1,27 @@
 import { getCategoriesData } from "../../data/getCategoriesData";
 import styles from "./Category.module.scss";
-// import { headerPosts } from "../../utilitis/types";
 import HomePost from "../../components/Home/HomePost/HomePost";
 import { getCategoryData } from "../../data/getCategoryData";
 import Head from "next/head";
-
-interface headerPost {
-  title: string;
-  coverImage?: { url: string };
-  excerpt: string;
-  slug: string;
-  categories: [{ slug: string }];
-}
+import { headerPosts } from "../../redux/generalInfo";
 
 interface category {
   slug: string;
   name: string;
-  posts: headerPost[];
+  posts: headerPosts[];
 }
 
 interface props {
   categoryData: {
     category: {
       name: string;
-      posts: headerPost[];
+      posts: headerPosts[];
     };
   };
 }
 function Category(props: props) {
   let { categoryData } = props;
-  const result = categoryData.category.posts.map((post: headerPost) => {
+  const result = categoryData.category.posts.map((post: headerPosts) => {
     return <HomePost data={post} key={post.title} />;
   });
 

@@ -1,6 +1,5 @@
 import styles from "./post.module.scss";
 import { getCategoriesData } from "../../../data/getCategoriesData";
-import { headerPosts } from "../../../utilitis/types";
 import { getPostData } from "../../../data/getPostData";
 import { useEffect, useState } from "react";
 import Head from "next/head";
@@ -9,6 +8,8 @@ import { AiFillStar } from "react-icons/ai";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { changeSignedInFavs, signedInData } from "../../../redux/signedIn";
+import { headerPosts } from "../../../redux/generalInfo";
+
 interface category {
   slug: string;
   name: string;

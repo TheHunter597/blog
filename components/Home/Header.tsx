@@ -1,6 +1,6 @@
 import HomePost from "./HomePost/HomePost";
 import styles from "./Header.module.scss";
-import { headerPosts } from "../../utilitis/types";
+import { headerPosts } from "../../redux/generalInfo";
 
 interface props {
   headerPosts: headerPosts[];

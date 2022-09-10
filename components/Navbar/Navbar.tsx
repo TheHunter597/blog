@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { FcSearch } from "react-icons/fc";
 import { FaBars } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
-import { RootDispatch, RootState } from "../../redux";
+import { RootDispatch } from "../../redux";
 import {
   generalInfoData,
   fetchAllPosts,

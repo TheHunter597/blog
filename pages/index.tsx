@@ -1,7 +1,6 @@
 import Header from "../components/Home/Header";
 import { getLatestPosts } from "../data/getLatestPosts";
 import styles from "./Home.module.scss";
-import { headerPosts } from "../utilitis/types";
 import Welcome from "../components/Home/Welcome";
 import Allposts from "../components/Home/Allposts";
 import { getPostsData } from "../data/getPostsData";
@@ -15,7 +14,7 @@ import {
 } from "../redux/signedIn";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux";
-
+import { headerPosts } from "../redux/generalInfo";
 interface props {
   latestPosts: headerPosts[];
   allPosts: {
@@ -28,11 +27,15 @@ function Home(props: props) {
   let { latestPosts, allPosts } = props;
   const dispatch = useDispatch();
   const signedIn = useSelector((state: RootState) => state.signedIn.isSignedIn);
+  console.log("meh");
+
   useEffect(() => {
     if (localStorage.getItem("SignedIn") == "true") {
       dispatch(changeIsSignedIn(true));
       dispatch(changeSignedInUsername(localStorage.getItem("Username")));
       dispatch(changeSignedInEmail(localStorage.getItem("Email")));
+      console.log("meh in pages");
+
       dispatch(
         changeSignedInFavs(
           JSON.parse(localStorage.getItem("favs") as string) === null
