@@ -64,7 +64,7 @@
   &__content {
     grid-area: content;
     margin-inline: auto;
-    width: min(97%, 1100px);
+    width: min(97%, 900px);
     p {
       padding-top: 2rem;
       font-size: $fs-large;
@@ -84,7 +84,7 @@
   &__addFav {
     font-size: 5rem;
     position: absolute;
-    top: 40%;
+    top: 35%;
     right: 15%;
     @media (max-width: 600px) {
       top: 25%;
