@@ -13,6 +13,9 @@
   div {
     &:first-child {
       grid-area: main;
+      h4 {
+        font-size: $fs-large;
+      }
     }
   }
   @media (max-width: 900px) {
