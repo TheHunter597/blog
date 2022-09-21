@@ -134,6 +134,7 @@ function Navbar() {
           }`}
           ref={input}
           onChange={(e) => setSearchTerm(e.target.value)}
+          value={searchTerm}
         />
         {activeSearch && searchTerm.length > 1 ? (
           <ul className={styles.Navbar__dropdown}>{dropdownContent}</ul>
@@ -157,7 +158,7 @@ function Navbar() {
             </li>
           ) : (
             <>
-              <li>
+              <li className={styles["Navbar__usename"]}>
                 <Link href="/">
                   <a>{signedInState.username}</a>
                 </Link>

@@ -1,7 +1,8 @@
 @import "../../../styles/index.module.scss";
 
 .Post {
-  width: min(90%, 1250px);
+  // width: min(90%, 1250px);
+  width: 100%;
   margin-inline: auto;
   @media (max-width: 800px) {
     overflow: hidden;
@@ -49,7 +50,7 @@
   }
   &__image {
     padding-top: 7rem;
-    width: 90%;
+    width: 80%;
     @media (max-width: 400px) {
       width: 90%;
     }
@@ -64,7 +65,10 @@
   &__content {
     grid-area: content;
     margin-inline: auto;
-    width: min(97%, 900px);
+    width: min(97%, 1000px);
+    code {
+      overflow-x: scroll;
+    }
     p {
       padding-top: 2rem;
       font-size: $fs-large;
@@ -98,6 +102,15 @@
       svg {
         animation: addTofav 1.5s ease-out;
       }
+    }
+  }
+  &__contact {
+    position: fixed;
+    top: 35%;
+    right: 5%;
+    z-index: 2;
+    @media (max-width: 800px) {
+      position: static;
     }
   }
 }

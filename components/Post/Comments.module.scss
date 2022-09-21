@@ -1,0 +1,84 @@
+@import "../../styles/index.module.scss";
+
+.Comments {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  h3 {
+    font-size: $fs-XXL;
+    text-align: center;
+  }
+  &__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 3rem;
+    width: 85%;
+    @media (max-width: 600px) {
+      width: 95%;
+    }
+    margin-inline: auto;
+    gap: 2rem;
+    h4 {
+      font-size: $fs-medium;
+      span {
+        color: var(--orange-color);
+      }
+    }
+    textarea {
+      width: 100%;
+      margin-inline: auto;
+      font-size: 2.5rem;
+      padding: 0.8rem 3rem;
+      resize: none;
+      height: 15rem;
+      margin-bottom: 2rem;
+    }
+  }
+  &__addNewComment {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    @media (max-width: 600px) {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+    gap: 2rem;
+    button {
+      font-size: 2.5rem;
+      padding: 0.8rem 3rem;
+      cursor: pointer;
+      @media (max-width: 600px) {
+        width: 45%;
+      }
+      background-color: var(--secondary-text-color);
+      color: white;
+      transition: all 0.7s;
+      border: none;
+      border-radius: 5px;
+      &:hover {
+        background-color: var(--orange-color);
+      }
+    }
+  }
+  &__warning {
+    font-size: $fs-medium;
+    text-align: center;
+    &--sucess {
+      color: green;
+    }
+    &--fail {
+      color: red;
+    }
+  }
+  &__comments {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: white;
+    padding: 0 4rem;
+    gap: 3rem;
+    margin-top: 8rem;
+  }
+}

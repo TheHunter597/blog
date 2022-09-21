@@ -8,13 +8,9 @@ import { AiFillStar } from "react-icons/ai";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { changeSignedInFavs, signedInData } from "../../../redux/signedIn";
-import { headerPosts } from "../../../redux/generalInfo";
-
-interface category {
-  slug: string;
-  name: string;
-  posts: headerPosts[];
-}
+import Comments from "../../../components/Post/Comments";
+import ContactSideBar from "../../../components/Post/ConactSideBar";
+import { RootState } from "../../../redux";
 
 interface props {
   data: {
@@ -30,6 +26,14 @@ interface props {
       categories: [];
       coverImage: { url: string };
       author: { name: string; picture: { url: string } | null };
+      comments: {
+        comment: string;
+        publishedAt: string;
+        id: string;
+        userdatabase: {
+          email: string;
+        };
+      }[];
     };
   };
 }
@@ -46,16 +50,19 @@ function Post(props: props) {
     slug,
     excerpt,
     categories,
+    comments,
   } = data.post;
   const [favourited, setFavourited] = useState(false);
-
+  const [currentComments, setCurrentComments] = useState([]);
+  const phoneUser = useSelector(
+    (state: RootState) => state.generalInfo.phoneUser
+  );
   useEffect(() => {
     if (signedInState.favs != null) {
       let fav = signedInState.favs.some((entry) => entry.slug === slug);
       setFavourited(fav);
     }
   }, [slug, signedInState.favs]);
-
   useEffect(() => {
     document.querySelector("#content")!.innerHTML = content.html;
   });
@@ -65,7 +72,6 @@ function Post(props: props) {
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1) + " ")
     .concat();
-
   return (
     <>
       <Head>
@@ -87,7 +93,7 @@ function Post(props: props) {
                 ];
                 dispatch(changeSignedInFavs(newList));
                 localStorage.setItem("favs", JSON.stringify(newList));
-                const result = fetch("/api/addToFavList", {
+                const result = fetch("/api/favs/addToFavList", {
                   method: "POST",
                   body: JSON.stringify({
                     email: signedInState.email,
@@ -106,7 +112,7 @@ function Post(props: props) {
                 dispatch(changeSignedInFavs(newList));
                 localStorage.setItem("favs", JSON.stringify(newList));
 
-                const result = fetch("/api/removeFromFavList", {
+                const result = fetch("/api/favs/removeFromFavList", {
                   method: "POST",
                   body: JSON.stringify({
                     email: signedInState.email,
@@ -161,37 +167,41 @@ function Post(props: props) {
         </div>
         <div className={styles.Post__content}>
           <p id="content"></p>
+          <div className={`${styles["Post__contact"]}`}>
+            <ContactSideBar />
+          </div>
         </div>
+        <Comments slug={slug} comments={comments} />
       </div>
     </>
   );
 }
 
-export async function getStaticPaths() {
-  let result = (await getCategoriesData()) || [];
-  let Allpaths: {}[] = [];
-  let paths = result.categories.map((category: category) => {
-    category.posts.map((post) =>
-      Allpaths.push({
-        params: { categorySlug: category.slug, postSlug: post.slug },
-      })
-    );
-  });
+// export async function getStaticPaths() {
+//   let result = (await getCategoriesData()) || [];
+//   let Allpaths: {}[] = [];
+//   let paths = result.categories.map((category: category) => {
+//     category.posts.map((post) =>
+//       Allpaths.push({
+//         params: { categorySlug: category.slug, postSlug: post.slug },
+//       })
+//     );
+//   });
 
-  return {
-    fallback: false,
-    paths: Allpaths,
-  };
-}
+//   return {
+//     fallback: false,
+//     paths: Allpaths,
+//   };
+// }
 
-export async function getStaticProps(context: any) {
+export async function getServerSideProps(context: any) {
   let result = (await getPostData(context.params.postSlug)) || [];
 
   return {
     props: {
       data: result,
     },
-    revalidate: 30,
+    // revalidate: 6,
   };
 }
 

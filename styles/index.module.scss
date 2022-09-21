@@ -21,6 +21,8 @@ $secondary-dark: #27272b;
 $charcoal--500: #405261;
 $charcoal--800: #1d2b36;
 
+$light-pink: #ff416c;
+
 .header-primary {
   font-size: $fs-huge;
   color: var(--primary-text-color);
@@ -62,6 +64,7 @@ $charcoal--800: #1d2b36;
   --primary-text-color: #{$charcoal--800};
   --secondary-text-color: #{$charcoal--500};
   --tertiary-text-color: #{$neutral-dark-blue};
+  --primary-element-color: #{$light-pink};
   --orange-color: #{$primary-red};
   scroll-behavior: smooth;
 }

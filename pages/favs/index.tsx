@@ -11,6 +11,7 @@ function Favs() {
   const result = signedInState.favs.map((entry) => {
     return <HomePost data={entry} key={entry.coverImage.url} />;
   });
+
   return (
     <div className={styles.Favs}>
       <Head>

@@ -1,0 +1,19 @@
+@import "../../styles/index.module.scss";
+
+.ContactSideBar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  button {
+    font-size: 3rem;
+    color: var(--orange-color);
+    background-color: transparent;
+    border: none;
+  }
+  @media (max-width: 800px) {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: center;
+  }
+}

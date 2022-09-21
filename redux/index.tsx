@@ -3,12 +3,14 @@ import generalInfo from "./generalInfo";
 import signIn from "./signIn";
 import signUp from "./signUp";
 import signedIn from "./signedIn";
+import comments from "./comments";
 const store = configureStore({
   reducer: {
     generalInfo,
     signIn,
     signUp,
     signedIn,
+    comments,
   },
 });
 

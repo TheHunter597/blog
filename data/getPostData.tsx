@@ -12,6 +12,14 @@ export async function getPostData(slug: string) {
       excerpt
       slug
       title
+      comments(orderBy: publishedAt_DESC) {
+        comment
+        publishedAt
+        id
+        userdatabase {
+          email
+        }
+      }
       categories {
       slug
       }

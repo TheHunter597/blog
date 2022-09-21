@@ -7,11 +7,23 @@ export async function getSignedInUserData(email: string) {
 
   const query = gql`
     query MyQuery {
-      userdatabase(where: { email: "${email}"}) {
-        email
-        username
+  userdatabase(where: {email: "${email}"}) {
+    email
+    username
+    favs {
+      excerpt
+      slug
+      title
+      coverImage {
+        url
+      }
+      categories {
+        slug
       }
     }
+  }
+}
+
   `;
   try {
     const result = await graphQLClient.request(query);
